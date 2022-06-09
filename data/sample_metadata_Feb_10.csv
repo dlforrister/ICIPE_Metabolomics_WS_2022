@@ -1,0 +1,88 @@
+﻿id/sequence,Year,Month,Day,file_name/sample id,sample_type,species,plant_number,chemistry_number,associated_blank,associated_RTI
+277,,,,BLK_27,Blank,,,,,
+278,2021,2,10,RTI_52,Standard,,,,,
+279,2021,2,10,RTI_53,Standard,,,,,
+280,2021,2,10,BLK_28,Blank,,,,,
+281,2021,2,10,ENE_1234,Sample,Inga microcoma,2590,cG270,BLK_28,RTI_53
+282,2021,2,10,ENE_1190,Sample,"Piper ""glaucum""",2095,cG226,BLK_28,RTI_53
+283,2021,2,10,ENE_872,Sample,"Piper ""crasito""",443,cG047,BLK_28,RTI_53
+284,2021,2,10,ENE_896,Sample,"Psychotria ""axil_do_matia""",768,cG079,BLK_28,RTI_53
+285,2021,2,10,ENE_916,Sample,"Piper ""hirsuto""",305,cG021,BLK_28,RTI_53
+286,2021,2,10,RTI_54,Standard,,,,BLK_28,
+287,2021,2,10,ENE_931,Sample,"Piper ""chic""",367,cG037,BLK_28,RTI_54
+288,2021,2,10,ENE_1023,Sample,"Piper ""obbig""",1118,cG102,BLK_28,RTI_54
+289,2021,2,10,ENE_1024,Sample,"Piper ""obliq-pechirauto""",1230,cG127,BLK_28,RTI_54
+290,2021,2,10,ENE_1040,Sample,Inga auristelae,1375,cG141,BLK_28,RTI_54
+291,2021,2,10,ENE_1045,Sample,Piper bellidifolium,1096,cG096,BLK_28,RTI_54
+292,2021,2,10,RTI_55,Standard,,,,,
+293,2021,2,10,BLK_29,Blank,,,,,
+294,2021,2,10,ENE_1065,Sample,Inga cordatoalata,1101,cG098,BLK_29,RTI_55
+295,2021,2,10,ENE_1067,Sample,Inga ruiziana,1191,cG120,BLK_29,RTI_55
+296,2021,2,10,ENE_1072,Sample,"Miconia ""café""",1171,cG114,BLK_29,RTI_55
+297,2021,2,10,ENE_1141,Sample,"Piper ""obligum""",1810,cG195,BLK_29,RTI_55
+298,2021,2,10,ENE_1151,Sample,Inga aria,1725,cG175,BLK_29,RTI_55
+299,2021,2,10,RTI_56,Standard,,,,BLK_29,
+300,2021,2,10,ENE_1193,Sample,"Piper ""corazón"" colonso",2050,cG216,BLK_29,RTI_56
+301,2021,2,10,ENE_1189,Sample,Piper,2250,cG242,BLK_29,RTI_56
+302,2021,2,10,ENE_1149,Sample,Piper,1786,cG191,BLK_29,RTI_56
+303,2021,2,10,ENE_1146,Sample,"Palicourea ""plastiel""",1790,cG192,BLK_29,RTI_56
+304,2021,2,10,ENE_1138,Sample,"Miconia ""clide""",,cG208,BLK_29,RTI_56
+305,2021,2,10,RTI_57,Standard,,,,,
+306,2021,2,10,BLK_30,Blank,,,,,
+307,2021,2,10,ENE_1134,Sample,Inga vismiifolia,1772,cG188,BLK_30,RTI_57
+308,2021,2,10,ENE_1075,Sample,,,,BLK_30,RTI_57
+309,2021,2,10,ENE_960,Sample,Psychotria morfo 3,,cG015,BLK_30,RTI_57
+310,2021,2,10,ENE_1123,Sample,"Miconia ""pseudo-obovoid""",1742,cG178,BLK_30,RTI_57
+311,2021,2,10,ENE_1136,Sample,Piper,1801,cG194,BLK_30,RTI_57
+312,2021,2,10,RTI_58,Standard,,,,BLK_30,
+313,2021,2,10,ENE_1032,Sample,Piper augustum,1091,cG093,BLK_30,RTI_58
+314,2021,2,10,ENE_1131,Sample,"Inga ""pseudo-capitata""",1776,cG189,BLK_30,RTI_58
+315,2021,2,10,ENE_1135,Sample,Inga codatoalata,1659,cG168,BLK_30,RTI_58
+316,2021,2,10,ENE_1211,Sample,"Miconia ""2074""",2074,cG221,BLK_30,RTI_58
+317,2021,2,10,ENE_930,Sample,Inga cf. ornata (vismifolia),310,cG025,BLK_30,RTI_58
+318,2021,2,10,RTI_59,Standard,,,,,
+319,2021,2,10,BLK_31,Blank,,,,,
+320,2021,2,10,ENE_1232,Sample,Inga alba,2474,cG258,BLK_31,RTI_59
+321,2021,2,10,ENE_919,Sample,"Ficus ""tanduzii""",603,cG059,BLK_31,RTI_59
+322,2021,2,10,ENE_922,Sample,Inga teniestipula,569,cG054,BLK_31,RTI_59
+323,2021,2,10,ENE_1236,Sample,Inga thibaudiana,2547,cG268,BLK_31,RTI_59
+324,2021,2,10,ENE_956,Sample,Piper morfo 3,54,cG009,BLK_31,RTI_59
+325,2021,2,10,RTI_60,Standard,,,,BLK_31,
+326,2021,2,10,ENE_906,Sample,"Miconia ""ortigosa""",668,cG070,BLK_31,RTI_60
+327,2021,2,10,ENE_1214,Sample,Inga umbellifera ala angosta,2514,cG263,BLK_31,RTI_60
+328,2021,2,10,ENE_1215,Sample,Miconia crassa-ondulada,2639,cG275,BLK_31,RTI_60
+329,2021,2,10,ENE_1246,Sample,Miconia redondita semibul,2640,cG276,BLK_31,RTI_60
+330,2021,2,10,ENE_1030,Sample,"Psychotria ""crenulada""",1128,cG104,BLK_31,RTI_60
+331,2021,2,10,RTI_61,Standard,,,,,
+332,2021,2,10,BLK_32,Blank,,,,,
+333,2021,2,10,ENE_945,Sample,Psychotria morfo 2,49,cG008,BLK_32,RTI_61
+334,2021,2,10,ENE_961,Sample,Piper morfo 5,201,cG015,BLK_32,RTI_61
+335,2021,2,10,ENE_1133,Sample,"Miconia ""domatia""",1969,cG203,BLK_32,RTI_61
+336,2021,2,10,ENE_1132,Sample,"Inga ""incognito""",1652,cG164,BLK_32,RTI_61
+337,2021,2,10,ENE_1121,Sample,Miconia nervosa,1798,cG204,BLK_32,RTI_61
+338,2021,2,10,RTI_62,Standard,,,,BLK_32,
+339,2021,2,10,ENE_1226,Sample,Inga ruiziana,2461,cG255,BLK_32,RTI_62
+340,2021,2,10,ENE_1238,Sample,Inga unbellifera ala angosta,2950,cG288,BLK_32,RTI_62
+341,2021,2,10,ENE_1160,Sample,"Miconia ""lija""",1779,cG190,BLK_32,RTI_62
+342,2021,2,10,ENE_1159,Sample,"Psychotria ""venulosa""",1643,cG159,BLK_32,RTI_62
+343,2021,2,10,ENE_1154,Sample,"Piper ""lenguetita""",1770,cG187,BLK_32,RTI_62
+344,2021,2,10,RTI_63,Standard,,,,,
+345,2021,2,10,BLK_33,Blank,,,,,
+346,2021,2,10,ENE_1245,Sample,Miconia cariodanopsis,2788,cG285,BLK_33,RTI_63
+347,2021,2,10,ENE_1242,Sample,Miconia caryodapniopsis,2420,cG250,BLK_33,RTI_63
+348,2021,2,10,ENE_924,Sample,"Miconia ""bulli_brown""",577,cG055,BLK_33,RTI_63
+349,2021,2,10,ENE_1174,Sample,"Piper ""hirsuta""",2385,cG248,BLK_33,RTI_63
+350,2021,2,10,ENE_1059,Sample,"Miconia ""smara""",1187,cG117,BLK_33,RTI_63
+351,2021,2,10,RTI_64,Standard,,,,BLK_33,
+352,2021,2,10,ENE_1068,Sample,Miconia coneada-pec,1209,cG124,BLK_33,RTI_64
+353,2021,2,10,ENE_1179,Sample,Piper augustum con pelos,2057,cG217,BLK_33,RTI_64
+354,2021,2,10,ENE_1073,Sample,"Piper ""obchic""",1391,cG142,BLK_33,RTI_64
+355,2021,2,10,ENE_1158,Sample,Inga capitata,1765,cG185,BLK_33,RTI_64
+356,2021,2,10,ENE_1031,Sample,"Piper ""minibul""",1500,cG153,BLK_33,RTI_64
+357,2021,2,10,RTI_65,Standard,,,,,
+358,2021,2,10,BLK_34,Blank,,,,,
+359,2021,2,10,ENE_1039,Sample,Miconia punetata,1138,cG107,BLK_34,RTI_65
+360,2021,2,10,ENE_1071,Sample,Policourea,1120,cG103,BLK_34,RTI_65
+361,2021,2,10,RTI_66,Standard,,,,,
+362,2021,2,10,BLK_35,Blank,,,,,
+363,2021,2,19,RTI_67,Standard,,,,,
