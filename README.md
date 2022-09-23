@@ -30,6 +30,13 @@ We have a lot of information to cover and just three days to do it. To maximize 
 2. program 2
 3. program 3
 
+### Download datasets and code
+Please download the practice datasets and code prior to traveling to ICIPE for the workshop.  You will need these files for the hands-on analysis training.
+1. Code 1
+2. Code 2
+3. Dataset1
+4. Dataset2
+
 ### Download and read these three papers:
 1. Paper 1: [Wiggins et al 2016](Wiggins2016.pdf) Quantitative and qualitative shifts in defensive metabolites define chemical defense investment during leaf development in Inga, a genus of tropical trees.
 2. Paper 2: [Sedio et al 2021](Sedio2021.pdf). Chemical Similarity of Co-occurring Trees Decreases With Precipitation and Temperature in North American Forests. 
@@ -46,9 +53,3 @@ You will work with other participants to present one of these papers during the 
 ### COVID Policies
 Participants should have proof of full COVID-19 vaccination prior to the workshop.
 Please upload your COVID-19 vaccination information here: XXXXXXXXXXXXXXXXXXXXXXXXX
-
-* Code and dummy datasets for metabolomics workshop
-* Describe any prerequisites, libraries, OS version, etc., needed before installing program.
-* ex. Windows 10
-
-
