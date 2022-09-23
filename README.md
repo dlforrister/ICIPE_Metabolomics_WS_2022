@@ -29,10 +29,18 @@ We have a lot of information to cover and just three days to do it. To maximize 
        - [Visualizing data modules](https://datacarpentry.org/R-ecology-lesson/04-visualization-ggplot2.html)
 2. program 2
 3. program 3
-### Download and read these three papers
-1. Paper 1: Wiggins et al 2016. Quantitative and qualitative shifts in defensive metabolites define chemical defense investment during leaf development in Inga, a genus of tropical trees.  (LINK TO PDF)
-2. Paper 2: Sedio et al 2021. Chemical Similarity of Co-occurring Trees Decreases With Precipitation and Temperature in North American Forests. (LINK TO PDF)
-3. Paper 3: Endara et al 2018. Chemocoding as an identification tool where morphological‐ and DNA‐based methods fall short: Inga as a case study (LINK TO PDF)
+
+### Download and read these three papers:
+1. Paper 1: [Wiggins et al 2016](Wiggins2016.pdf) Quantitative and qualitative shifts in defensive metabolites define chemical defense investment during leaf development in Inga, a genus of tropical trees.
+2. Paper 2: [Sedio et al 2021](Sedio2021.pdf). Chemical Similarity of Co-occurring Trees Decreases With Precipitation and Temperature in North American Forests. 
+3. Paper 3: [Endara et al 2018](Endara2018.pdf) Chemocoding as an identification tool where morphological‐ and DNA‐based methods fall short: Inga as a case study.
+
+You will work with other participants to present one of these papers during the Journal Club activity.  You will be given your assigned journal club group and paper approximately one week before the workshop. You will have time to meet with your group prior to presenting your paper, however this time is limited so please carefully read your assigned journal club paper and prepare answers to the following questions: 
+- What are the authors' goals and/or hypotheses?
+- What specific methods did the authors use to acheive these goals or test these hypotheses?
+- What did they find? 
+- Do you agree with their interpretation of their results?
+- Why do you think we picked this paper for the Journal Club?
 
 
 ### COVID Policies
