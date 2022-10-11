@@ -45,6 +45,7 @@ Please download the practice datasets and code prior to traveling to ICIPE for t
 You will work with other participants to present one of these papers during the Journal Club activity.  You will be given your assigned journal club group and paper approximately one week before the workshop. You will have time to meet with your group prior to presenting your paper, however this time is limited so please carefully read your assigned journal club paper and prepare answers to the following questions: 
 - What are the authors' goals and/or hypotheses?
 - What specific methods did the authors use to acheive these goals or test these hypotheses?
+- Are these methods similar or different than the approaches we have discussed in the workshop?
 - What did they find? 
 - Do you agree with their interpretation of their results?
 - Why do you think we picked this paper for the Journal Club?
