@@ -1,0 +1,96 @@
+---
+title: "Pre-course installation requirements"
+author: "Dale L. Forrister"
+affiliation: "School of Biological Sciences, University of Utah"
+date: "9/16/2022"
+contact: "dlforrister@gmail.com"
+output: html_document
+---
+
+# 1 A quick note about R Notebooks:
+
+-   All scripts have been written as R Notebooks. This allows us to have extensive annotation and description of code, including inserting images and tables. However to fully visualize these it's important to change in to "visual mode"
+
+    -   On the tool bar above click back an forth between "source" and "visual".
+
+-   There are two ways to run code within the notebook.
+
+    -   As a SINGLE line. Click a on a line of code within a notebook and hit control + enter.
+
+    -   the entire "chunk". If click the green arrow head on the top right of the chunk you will run the entire chunk, line by line
+
+        TRY BOTH BELLOW
+
+```{r}
+print("Just a single line")
+
+print("All of the lines")
+```
+
+# 2 Check your version of R
+
+Most packages used in metabolomics are maintained via Bioconductor, and thus need to be installed with "BiocManager"
+
+The analysis in this document requires an R version = 4.2.1 and recent versions of the MSnbase and xcms (version \>= 3.19 is needed) packages. The packages can be installed with:
+
+First, check that R is the most recent verison
+
+```{r}
+R.version
+
+
+```
+
+If this is not 4.2.1 or later please update R here:
+
+<https://cran.r-project.org/>
+
+Download the correct version for your computer.
+
+Restart Rstudio and check run the chunk above to confirm it's up to date.
+
+# 3 Install the required packages
+
+```{r packages, include=FALSE}
+
+if (!requireNamespace("BiocManager", quietly=TRUE)) { 
+    install.packages("BiocManager")}
+
+
+if (!requireNamespace("xcms", quietly=TRUE)) {
+    BiocManager::install(version='devel')
+    BiocManager::install("xcms")}
+
+library(xcms)
+
+```
+
+Again, let's confirm it is the most recent version (3.19)
+
+```{r}
+package.version("xcms")
+```
+
+In this tutorial we will also use the here package in order to simplify file paths when working with R projects and R markdown files.
+
+```{r filepaths}
+if (!require(tidyverse)) {install.packages('tidyverse')}
+
+library(tidyverse)
+
+if (!require(here)) {install.packages('here')}
+
+library(here)
+here()
+```
+
+The here library is very usefull when working with R projects. Using here() provides a short hand notation that is always based on where the .rproj file is located.
+
+When we run here() it will tell us our starting point
+
+then we can build file paths relative to this starting point using "," between folders followed by a file path name.
+
+```{r}
+here("data","standards","RN18_50_222.mzML")
+
+```
