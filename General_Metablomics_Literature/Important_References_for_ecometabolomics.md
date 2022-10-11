@@ -4,7 +4,9 @@
 
 ## Metabolomics Pipeline and Overview:
 
-
+## XCMS
+ The official XCMS tutorial can be found here: https://bioconductor.org/packages/release/bioc/vignettes/xcms/inst/doc/xcms.html
+ You can read Smith et al 2006 [https://asset-pdf.scinapse.io/prod/1964010911/1964010911.pdf](url) to learn more about how XCMS works. This package is constantly updated and relevant information can be found on the github page: https://github.com/sneumann/xcms
 
 ##  GUI based alternatives to XCMS:
 MzMine:
