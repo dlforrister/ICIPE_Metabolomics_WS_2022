@@ -4,14 +4,27 @@
 
 ## Metabolomics Pipeline and Overview:
 
-## GC/LC data analysis with XCMS:
 
-## Alternatives to XCMS:
-MzMine 3
-XCMS Online
+
+##  GUI based alternatives to XCMS:
+MzMine:
+  MzMine is an alternative to XCMS for processing GC/LC-MS samples. It is a GUI based program. They provide lots of videos and tutorials
+  http://mzmine.github.io/documentation.html
+   
+XCMS Online:
+  XCMS can also be run online with a more GUI based interface. 
+  https://xcmsonline.scripps.edu/landing_page.php?pgcontent=mainPage
 
 ## Global Natural Products Social Molecular Networking (GNPS)
 
-##Feature Based Molecular Networking
+GNPS is a really important resource for all types of metabolomics. It relies on ms/ms based data for linking compounds with similar spectra between and within metabolomics studies. It provides tools on spectral library searches, molecular networking visualization. It is hub for metabolomics inovation and novel methods are often deployed here before they are published in the literature. They provide training and valuable information on their documentation page:
 
+https://ccms-ucsd.github.io/GNPSDocumentation/
+
+Register for a GNPS account:
+https://gnps.ucsd.edu/ProteoSAFe/user/register.jsp
+
+
+##Feature Based Molecular Networking: 
+  FBML aims to comebine LC MS level 1 data with MS/MS molecular networks to gain biological insight from both compound abundance and structure. Paper describing it here [Nothias et al 2020](url): https://www.nature.com/articles/s41592-020-0933-6
 
