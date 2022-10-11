@@ -21,10 +21,10 @@ GNPS is a really important resource for all types of metabolomics. It relies on 
 
 https://ccms-ucsd.github.io/GNPSDocumentation/
 
-Register for a GNPS account:
+### Register for a GNPS account:
 https://gnps.ucsd.edu/ProteoSAFe/user/register.jsp
 
 
-##Feature Based Molecular Networking: 
+## Feature Based Molecular Networking: 
   FBML aims to comebine LC MS level 1 data with MS/MS molecular networks to gain biological insight from both compound abundance and structure. Paper describing it here [Nothias et al 2020](url): https://www.nature.com/articles/s41592-020-0933-6
 
