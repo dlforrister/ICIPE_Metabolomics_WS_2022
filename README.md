@@ -27,7 +27,8 @@ We have a lot of information to cover and just three days to do it. To maximize 
        - [Starting with data](https://datacarpentry.org/R-ecology-lesson/02-starting-with-data.html)
        - [Manipulating data](https://datacarpentry.org/R-ecology-lesson/03-dplyr.html)
        - [Visualizing data modules](https://datacarpentry.org/R-ecology-lesson/04-visualization-ggplot2.html)
-2. program 2
+2. Register for GNPS: https://gnps.ucsd.edu/ProteoSAFe/user/register.jsp
+
 3. program 3
 
 ### Download or clone this entire git repository:
