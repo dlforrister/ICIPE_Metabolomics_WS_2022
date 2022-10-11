@@ -30,14 +30,14 @@ We have a lot of information to cover and just three days to do it. To maximize 
 2. program 2
 3. program 3
 
-### Download datasets and code
+### Download or clone this entire git repository:
 Please download the practice datasets and code prior to traveling to ICIPE for the workshop.  You will need these files for the hands-on analysis training.
-1. Code 1
-2. Code 2
-3. Dataset1
-4. Dataset2
 
-### Download and read these three papers:
+
+### Read the journal club papers:
+
+(PDFs found in Journal_Club_PDFs folder)
+
 1. Paper 1: [Wiggins et al 2016](Wiggins2016.pdf) Quantitative and qualitative shifts in defensive metabolites define chemical defense investment during leaf development in Inga, a genus of tropical trees.
 2. Paper 2: [Sedio et al 2021](Sedio2021.pdf). Chemical Similarity of Co-occurring Trees Decreases With Precipitation and Temperature in North American Forests. 
 3. Paper 3: [Endara et al 2018](Endara2018.pdf) Chemocoding as an identification tool where morphological‐ and DNA‐based methods fall short: Inga as a case study.
