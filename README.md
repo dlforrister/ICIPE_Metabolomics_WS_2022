@@ -29,7 +29,9 @@ We have a lot of information to cover and just three days to do it. To maximize 
        - [Visualizing data modules](https://datacarpentry.org/R-ecology-lesson/04-visualization-ggplot2.html)
 2. Register for GNPS: https://gnps.ucsd.edu/ProteoSAFe/user/register.jsp
 
-3. program 3
+3. Install Sirius https://boecker-lab.github.io/docs.sirius.github.io/'
+4. Once installed, start Sirius and follow the prompts to create an account. Make sure to verify your email!
+ 
 
 ### Download or clone this entire git repository:
 Please download the practice datasets and code prior to traveling to ICIPE for the workshop.  You will need these files for the hands-on analysis training.
