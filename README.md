@@ -36,18 +36,17 @@ We have a lot of information to cover and just three days to do it. To maximize 
      - Once installed, start Sirius and follow the prompts to create an account. 
      - Make sure to verify your email!
 4. CLONE this github repository and install required packages
-     - Click the green "CODE" button in the upper right above the readme 
+     - Click the green "CODE" button in the upper right above. Then click download zip
+      
+      ![GitHub Logo](/code/images/clone_github.png)
+     - Unzip this folder 
+     
+5. Make sure you can install all required packages.
+     - Navigate to the repository you just unzipped. Open the "ICIPE_Ecometabolomics.Rproj" with Rstudio. 
+     - Once RStudio opens. Click "File", "Open File" and navigate to "code/0_Pre_Course_package_installation.Rmd"
+          - follow all instructions in this code running each line to make sure all packages install correctly
+          
  
-
-### Download - use file we email u- Oscript. run it to install everything...
-Please download the practice datasets and code prior to traveling to ICIPE for the workshop.  You will need these files for the hands-on analysis training.
-
-Due to file size limitations, we have to download the folder from google drive. 
-1) Please Download the this script ["0_Pre_Course_package_installation" https://drive.google.com/drive/folders/1EbzSDooUh2ZFRy8WTGHrZ-g5NhHF4Fks?usp=sharing](https://drive.google.com/file/d/1YjdxpzZIFGORDCuIkEKKKNZnnUZSEWG1/view?usp=sharing)
-     (Right click on the folder name and click download)
-2) Navigate to this folder and open the "ICIPE_Ecometabolomics.Rproj" file with RStudio.
-3) Within Rstudio navigate to or open the R Notebook "/code/0_Pre_Course_package_installation.Rmd". Run this entire notebook to make sure all packages are installed
-
 ### Read the journal club papers:
 
 (PDFs found in Journal_Club_PDFs folder)
@@ -64,6 +63,8 @@ You will work with other participants to present one of these papers during the 
 - Do you agree with their interpretation of their results?
 - Why do you think we picked this paper for the Journal Club?
 
-
+###GITHUB in progress!
+     We will be updating this gihub right up until the start of the course. We will make sure everyone gets the final working copy on the first day of the course sharing all the required data via a flashdrive. NOTE, we will also update after this course so it remains a useful resource.
+     
 ### COVID Policies
 Participants should have proof of full COVID-19 vaccination prior to the workshop.
