@@ -22,6 +22,8 @@ www.icipe.org/about/guest-accomodation/duduville-international-guest-centre
 We have a lot of information to cover and just three days to do it. To maximize the value of this workshop, all participants are asked to do the following steps prior to attending the workshop:
 ### Download and install the following programs on your personal laptop computer
 1. R and R studio: https://rstudio-education.github.io/hopr/starting.html
+     If you already have them installed, please take the time to update to the latest versions!!
+
      - Workshop activities require participants to be familiar with the R programming language.  If you do not routinely use this program please work through the following [Data Carpentry](https://datacarpentry.org/) modules prior to the workshop:
        - [Intro to R](https://datacarpentry.org/R-ecology-lesson/01-intro-to-r.html)
        - [Starting with data](https://datacarpentry.org/R-ecology-lesson/02-starting-with-data.html)
@@ -29,8 +31,12 @@ We have a lot of information to cover and just three days to do it. To maximize 
        - [Visualizing data modules](https://datacarpentry.org/R-ecology-lesson/04-visualization-ggplot2.html)
 2. Register for GNPS: https://gnps.ucsd.edu/ProteoSAFe/user/register.jsp
 
-3. Install Sirius https://boecker-lab.github.io/docs.sirius.github.io/' ADD MORE DETAILED INFORMATION
-4. Once installed, start Sirius and follow the prompts to create an account. Make sure to verify your email!
+3. Install Sirius https://bio.informatik.uni-jena.de/software/sirius/ 
+     - install the SIRIUS+CSI:FingerID GUI and CLI - Version 5.5.7 (2022-07-13) about halfway down the above page
+     - Once installed, start Sirius and follow the prompts to create an account. 
+     - Make sure to verify your email!
+4. CLONE this github repository and install required packages
+     - Click the green "CODE" button in the upper right above the readme 
  
 
 ### Download - use file we email u- Oscript. run it to install everything...
