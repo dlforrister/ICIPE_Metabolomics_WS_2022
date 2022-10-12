@@ -422,7 +422,7 @@ It's a good idea to test out these parameters with more peaks to make sure our p
 Use the following chunks of code to fill out the rest of this table with appriate values.
 
 |      Compound Name      | retention time (S) | m/z (M-H) | Peak Width (s) | Average PPM error | SN Ratio |            Notes            |
-|:---------:|:---------:|:---------:|:---------:|:---------:|:---------:|:---------:|
+|:-----------------------:|:------------------:|:---------:|:--------------:|:-----------------:|:--------:|:---------------------------:|
 |        Raffinose        |         20         | 503.1618  |                |                   |          | This is a very narrow peak! |
 |       Tryptophan        |       141.6        | 203.0826  |      3-4       |        14         |    3     |                             |
 |  Camphorsulfonic acid   |     230 to 250     | 231.0697  |                |                   |          |  This is a very wide peak!  |
@@ -619,7 +619,7 @@ head(diff(single_peak_chr_df$mz) * 1e6 / mean(single_peak_chr_df$mz),40)
 Answers:
 
 |      Compound Name      | retention time (S) | m/z (M-H) | Peak Width (s) | Average PPM error | SN Ratio |            Notes            |
-|:---------:|:---------:|:---------:|:---------:|:---------:|:---------:|:---------:|
+|:-----------------------:|:------------------:|:---------:|:--------------:|:-----------------:|:--------:|:---------------------------:|
 |        Raffinose        |         20         | 503.1618  |       2        |         9         |    3     | This is a very narrow peak! |
 |       Tryptophan        |       141.6        | 203.0826  |       4        |        14         |    3     |       Low, wide peak        |
 |  Camphorsulfonic acid   |     230 to 250     | 231.0697  |       3        |        13         |    2     |  This is a very wide peak!  |

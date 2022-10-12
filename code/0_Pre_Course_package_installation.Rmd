@@ -74,9 +74,9 @@ package.version("xcms")
 In this tutorial we will also use the here package in order to simplify file paths when working with R projects and R markdown files.
 
 ```{r filepaths}
-if (!require(tidyverse)) {install.packages('tidyverse')}
+if (!require(dplyr)) {install.packages('dplyr')}
 
-library(tidyverse)
+library(dplyr)
 
 if (!require(here)) {install.packages('here')}
 
