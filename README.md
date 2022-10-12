@@ -37,7 +37,7 @@ We have a lot of information to cover and just three days to do it. To maximize 
 Please download the practice datasets and code prior to traveling to ICIPE for the workshop.  You will need these files for the hands-on analysis training.
 
 Due to file size limitations, we have to download the folder from google drive. 
-1) Please Download the folder "Forrister_Metabolomics_WS" from this link" https://drive.google.com/drive/folders/1EbzSDooUh2ZFRy8WTGHrZ-g5NhHF4Fks?usp=sharing
+1) Please Download the this script ["0_Pre_Course_package_installation" https://drive.google.com/drive/folders/1EbzSDooUh2ZFRy8WTGHrZ-g5NhHF4Fks?usp=sharing](https://drive.google.com/file/d/1YjdxpzZIFGORDCuIkEKKKNZnnUZSEWG1/view?usp=sharing)
      (Right click on the folder name and click download)
 2) Navigate to this folder and open the "ICIPE_Ecometabolomics.Rproj" file with RStudio.
 3) Within Rstudio navigate to or open the R Notebook "/code/0_Pre_Course_package_installation.Rmd". Run this entire notebook to make sure all packages are installed
