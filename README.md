@@ -61,4 +61,3 @@ You will work with other participants to present one of these papers during the 
 
 ### COVID Policies
 Participants should have proof of full COVID-19 vaccination prior to the workshop.
-Please upload your COVID-19 vaccination information here: XXXXXXXXXXXXXXXXXXXXXXXXX
