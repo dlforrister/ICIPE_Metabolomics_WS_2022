@@ -63,7 +63,7 @@ You will work with other participants to present one of these papers during the 
 - Do you agree with their interpretation of their results?
 - Why do you think we picked this paper for the Journal Club?
 
-###GITHUB in progress!
+### GITHUB in progress!
      We will be updating this gihub right up until the start of the course. We will make sure everyone gets the final working copy on the first day of the course sharing all the required data via a flashdrive. NOTE, we will also update after this course so it remains a useful resource.
      
 ### COVID Policies
