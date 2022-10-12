@@ -46,9 +46,9 @@ Due to file size limitations, we have to download the folder from google drive.
 
 (PDFs found in Journal_Club_PDFs folder)
 
-1. Paper 1: [Wiggins et al 2016](Forrister_Metabolomics_WS/Journal_Club_PDFs/Wiggins2016.pdf) Quantitative and qualitative shifts in defensive metabolites define chemical defense investment during leaf development in Inga, a genus of tropical trees.
-2. Paper 2: [Sedio et al 2021](Forrister_Metabolomics_WS/Journal_Club_PDFs/Sedio2021.pdf). Chemical Similarity of Co-occurring Trees Decreases With Precipitation and Temperature in North American Forests. 
-3. Paper 3: [Endara et al 2018](Forrister_Metabolomics_WS/Journal_Club_PDFs/Endara2018.pdf) Chemocoding as an identification tool where morphological‐ and DNA‐based methods fall short: Inga as a case study.
+1. Paper 1: [Wiggins et al 2016](https://github.com/dlforrister/Forrister_Metabolomics_WS/blob/main/Journal_Club_PDFs/Wiggins2016.pdf) Quantitative and qualitative shifts in defensive metabolites define chemical defense investment during leaf development in Inga, a genus of tropical trees.
+2. Paper 2: [Sedio et al 2021](https://github.com/dlforrister/Forrister_Metabolomics_WS/blob/main/Journal_Club_PDFs/Sedio2021.pdf). Chemical Similarity of Co-occurring Trees Decreases With Precipitation and Temperature in North American Forests. 
+3. Paper 3: [Endara et al 2018](https://github.com/dlforrister/Forrister_Metabolomics_WS/blob/main/Journal_Club_PDFs/Endara2018.pdf) Chemocoding as an identification tool where morphological‐ and DNA‐based methods fall short: Inga as a case study.
 
 You will work with other participants to present one of these papers during the Journal Club activity.  You will be given your assigned journal club group and paper approximately one week before the workshop. You will have time to meet with your group prior to presenting your paper, however this time is limited so please carefully read your assigned journal club paper and prepare answers to the following questions: 
 - What are the authors' goals and/or hypotheses?
