@@ -15,8 +15,8 @@ www.icipe.org/about/guest-accomodation/duduville-international-guest-centre
 * Morning: Lab tours, overview of sample collection and analysis 
 * Afternoon: Analysis Part 1 (Chromatograms to feature tables), Journal club paper presentation (#1)
 #### Day 3 (26 October 2022)
-* Morning: Analysis Part 2 (Annotation), Journal club paper presentation (#2), Analysis Part 3 (Multivariate Statistics)
-* Afternoon: Journal club paper presentation (#3), Poster presentations
+* Morning: Analysis Part 2 (Annotation), Analysis Part 3 (Multivariate Statistics)
+* Afternoon: Journal club paper presentation (#2), Poster presentations
 
 ## Pre-course requirements
 We have a lot of information to cover and just three days to do it. To maximize the value of this workshop, all participants are asked to do the following steps prior to attending the workshop:
@@ -33,7 +33,7 @@ We have a lot of information to cover and just three days to do it. To maximize 
 
 3. Install Sirius https://bio.informatik.uni-jena.de/software/sirius/ 
      - install the SIRIUS+CSI:FingerID GUI and CLI - Version 5.5.7 (2022-07-13) about halfway down the above page
-     - Once installed, start Sirius and follow the prompts to create an account. 
+     - Once installed, start Sirius and follow the prompts to create an account using your academic/university email. The program is free to all academic users; however if they do not recognize your institution you may have to provide additional information to get access. 
      - Make sure to verify your email!
 4. CLONE this github repository and install required packages
      - Click the green "CODE" button in the upper right above. Then click download zip
@@ -53,7 +53,6 @@ We have a lot of information to cover and just three days to do it. To maximize 
 
 1. Paper 1: [Wiggins et al 2016](https://github.com/dlforrister/Forrister_Metabolomics_WS/blob/main/Journal_Club_PDFs/Wiggins2016.pdf) Quantitative and qualitative shifts in defensive metabolites define chemical defense investment during leaf development in Inga, a genus of tropical trees.
 2. Paper 2: [Sedio et al 2021](https://github.com/dlforrister/Forrister_Metabolomics_WS/blob/main/Journal_Club_PDFs/Sedio2021.pdf). Chemical Similarity of Co-occurring Trees Decreases With Precipitation and Temperature in North American Forests. 
-3. Paper 3: [Endara et al 2018](https://github.com/dlforrister/Forrister_Metabolomics_WS/blob/main/Journal_Club_PDFs/Endara2018.pdf) Chemocoding as an identification tool where morphological‐ and DNA‐based methods fall short: Inga as a case study.
 
 You will work with other participants to present one of these papers during the Journal Club activity.  You will be given your assigned journal club group and paper approximately one week before the workshop. You will have time to meet with your group prior to presenting your paper, however this time is limited so please carefully read your assigned journal club paper and prepare answers to the following questions: 
 - What are the authors' goals and/or hypotheses?
@@ -64,7 +63,7 @@ You will work with other participants to present one of these papers during the 
 - Why do you think we picked this paper for the Journal Club?
 
 ### GITHUB in progress!
-     We will be updating this gihub right up until the start of the course. We will make sure everyone gets the final working copy on the first day of the course sharing all the required data via a flashdrive. NOTE, we will also update after this course so it remains a useful resource.
+We will be updating this gihub right up until the start of the course. We will make sure everyone gets the final working copy on the first day of the course sharing all the required data via a flashdrive. NOTE, we will also update after this course so it remains a useful resource.
      
 ### COVID Policies
 Participants should have proof of full COVID-19 vaccination prior to the workshop.
