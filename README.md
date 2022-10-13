@@ -18,6 +18,10 @@ www.icipe.org/about/guest-accomodation/duduville-international-guest-centre
 * Morning: Analysis Part 2 (Annotation), Analysis Part 3 (Multivariate Statistics)
 * Afternoon: Journal club paper presentation (#2), Poster presentations
 
+## Items to bring
+* Printed poster
+* Personal laptop with programs installed as described below
+
 ## Pre-course requirements
 We have a lot of information to cover and just three days to do it. To maximize the value of this workshop, all participants are asked to do the following steps prior to attending the workshop:
 ### Download and install the following programs on your personal laptop computer
