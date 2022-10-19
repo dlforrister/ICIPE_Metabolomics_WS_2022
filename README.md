@@ -3,10 +3,6 @@
 ## Description
 This workshop will provide training in metabolomic data analyses for graduate students and early-career scientists from sub-Saharan Africa, working on a variety of plant and animal species. Participants will gain skills for collecting, analyzing and sharing metabolomic data, focusing in particular on data analyses using freely available software. Participants will also gain scientific communication skills through paper discussions and a poster session. 
 
-## Support for this workshop is provided by a grant from the JRS Biodiversity Foundation.
-![GitHub Logo](/code/images/JRS_LOGO.png)
-
-
 
 ## Training Location
 Duduville Campus, icipe, Kasarani, Kenya: 
@@ -28,7 +24,7 @@ www.icipe.org/about/guest-accomodation/duduville-international-guest-centre
 * Journal club paper presentation 1 - Wiggins et al. 2016
 
 #### Day 3 (26 October 2022)
-* Ruth Muthoni Kihika - Lecture - Machine Learning and Chemical Analysis
+* Ruth Kihika-Opanda - Lecture - Machine Learning and Chemical Analysis
 * Dr. Dale Forrister - Lecture and Analysis Part 2 - Compound annotation and the power of MS/MS data
 * Journal club paper presentation 2 - Sedio et al. 2021
 * Poster presentations/"cocktail" hour
@@ -86,3 +82,7 @@ We will be updating this gihub right up until the start of the course. We will m
      
 ### COVID Policies
 Participants should have proof of full COVID-19 vaccination prior to the workshop.
+
+
+## Support for this workshop is provided by a grant from the JRS Biodiversity Foundation.
+![GitHub Logo](/code/images/JRS_LOGO.png)
