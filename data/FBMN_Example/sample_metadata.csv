@@ -1,0 +1,16 @@
+﻿injection_order,file_name,sample_type
+1,RN18_50_214.mzML,Standard
+2,RN18_50_215.mzML,Standard
+3,BN50_38.mzML,Blank
+4,DNE_3109.mzML,Sample
+5,DNE_1730.mzML,Sample
+6,DNE_668.mzML,Sample
+7,DNE_2770.mzML,Sample
+8,DNE_2965.mzML,Sample
+9,DNE_2987.mzML,Sample
+10,DNE_2989.mzML,Sample
+12,RN18_50_216.mzML,Standard
+13,DNE_753.mzML,Sample
+14,DNE_2731.mzML,Sample
+15,COMBINED_1.mzML,Pooled
+21,RN18_50_217.mzML,Standard

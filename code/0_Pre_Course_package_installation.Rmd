@@ -17,7 +17,7 @@ output: html_document
 
     -   As a SINGLE line. Click a on a line of code within a notebook and hit control + enter.
 
-    -   the entire "chunk". If click the green arrow head on the top right of the chunk you will run the entire chunk, line by line
+    -   the entire "chunk". If you click the green arrow head on the top right of the chunk you will run the entire chunk, line by line
 
         TRY BOTH BELLOW
 
