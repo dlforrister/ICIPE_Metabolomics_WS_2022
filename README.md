@@ -11,7 +11,7 @@ www.icipe.org/about/guest-accomodation/duduville-international-guest-centre
 #### Day 1 (24 October 2022)
 * Morning (8am) : Participant introductions
 * Dr. Baldwyn Torto - Lecture - Why Chemistry Matters? 
-* Dr. Esther Kiokointroduce - Lecture - Biodiversity and Chemistry
+* Dr. Esther Kioko - Lecture - Biodiversity and Chemistry
 * Dr. Dale Forrister - Lecture - What is Metabolomics?
 * Introduction to Journal Club Activity
 * Dr. Dale Forrister - Lecture - A deep dive into the ecometabolomics workflow
