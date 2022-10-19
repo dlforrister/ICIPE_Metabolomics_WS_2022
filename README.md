@@ -9,14 +9,24 @@ www.icipe.org/about/guest-accomodation/duduville-international-guest-centre
 
 ## Schedule
 #### Day 1 (24 October 2022)
-* Morning (8am) : Participant introductions, lectures on chemical ecology and metabolomics, introduce journal club activity 
-* Afternoon: Metabolomics workflows, install programs, review of R skills
+* Morning (8am) : Participant introductions
+* Dr. Baldwyn Torto - Lecture - Why Chemistry Matters? 
+* Dr. Esther Kiokointroduce - Lecture - Biodiversity and Chemistry
+* Dr. Dale Forrister - Lecture - What is Metabolomics?
+* Introduction to Journal Club Activity
+* Dr. Dale Forrister - Lecture - A deep dive into the ecometabolomics workflow
+* Office hours - time ot install programs, review of R skills
+
 #### Day 2 (25 October 2022)
-* Morning: Lab tours, overview of sample collection and analysis 
-* Afternoon: Analysis Part 1 (Chromatograms to feature tables), Journal club paper presentation (#1)
+* Dr. Xavier Cheseto -  Lab tours, overview of sample collection and analysis
+* Dr. Dale Forrister - Analysis Part 1 - Chromatograms to Feature tables
+* Journal club paper presentation 1 - Wiggins et al. 2016
+
 #### Day 3 (26 October 2022)
-* Morning: Analysis Part 2 (Annotation), Analysis Part 3 (Multivariate Statistics)
-* Afternoon: Journal club paper presentation (#2), Poster presentations
+* Ruth Muthoni Kihika - Lecture - Machine Learning and Chemical Analysis
+* Dr. Dale Forrister - Lecture and Analysis Part 2 - Compound annotation and the power of MS/MS data
+* Journal club paper presentation 2 - Sedio et al. 2021
+* Poster presentations/"cocktail" hour
 
 ## Items to bring
 * Printed poster
