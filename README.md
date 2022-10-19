@@ -1,11 +1,10 @@
 # Three Day Metabolomics Training Course (October 24-26, 2022)
 
 ## Description
-This workshop will provide training in metabolomic data analyses for graduate students and early-career scientists from sub-Saharan African, working on a variety of plant and animal species. Participants will gain skills for collecting, analyzing and sharing metabolomic data, focusing in particular on data analyses using freely available software. Participants will also gain scientific communication skills through paper discussions and a poster session. 
+This workshop will provide training in metabolomic data analyses for graduate students and early-career scientists from sub-Saharan Africa, working on a variety of plant and animal species. Participants will gain skills for collecting, analyzing and sharing metabolomic data, focusing in particular on data analyses using freely available software. Participants will also gain scientific communication skills through paper discussions and a poster session. 
 
 ## Support for this workshop is provided by a grant from the JRS Biodiversity Foundation.
-
-      ![GitHub Logo](/code/images/JRS_LOGO.png)
+![GitHub Logo](/code/images/JRS_LOGO.png)
 
 
 
