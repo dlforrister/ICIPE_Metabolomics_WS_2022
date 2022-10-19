@@ -1,7 +1,13 @@
 # Three Day Metabolomics Training Course (October 24-26, 2022)
 
 ## Description
-This workshop will provide training in metabolomic data analyses for graduate students and early-career scientists from sub-Saharan African, working on a variety of plant and animal species. Participants will gain skills for collecting, analyzing and sharing metabolomic data, focusing in particular on data analyses using freely available software. Participants will also gain scientific communication skills through paper discussions and a poster session. Support for this workshop is provided by a grant from the JRS Biodiversity Foundation.
+This workshop will provide training in metabolomic data analyses for graduate students and early-career scientists from sub-Saharan African, working on a variety of plant and animal species. Participants will gain skills for collecting, analyzing and sharing metabolomic data, focusing in particular on data analyses using freely available software. Participants will also gain scientific communication skills through paper discussions and a poster session. 
+
+## Support for this workshop is provided by a grant from the JRS Biodiversity Foundation.
+
+     ![JRS Logo](/code/images/clone_github.png)
+
+
 
 ## Training Location
 Duduville Campus, icipe, Kasarani, Kenya: 
@@ -9,14 +15,28 @@ www.icipe.org/about/guest-accomodation/duduville-international-guest-centre
 
 ## Schedule
 #### Day 1 (24 October 2022)
-* Morning (8am) : Participant introductions, lectures on chemical ecology and metabolomics, introduce journal club activity 
-* Afternoon: Metabolomics workflows, install programs, review of R skills
+* Morning (8am) : Participant introductions
+* Dr. Baldwyn Torto - Lecture - Why Chemistry Matters? 
+* Dr. Esther Kioko - Lecture - Biodiversity and Chemistry
+* Dr. Dale Forrister - Lecture - What is Metabolomics?
+* Introduction to Journal Club Activity
+* Dr. Dale Forrister - Lecture - A deep dive into the ecometabolomics workflow
+* Office hours - time ot install programs, review of R skills
+
 #### Day 2 (25 October 2022)
-* Morning: Lab tours, overview of sample collection and analysis 
-* Afternoon: Analysis Part 1 (Chromatograms to feature tables), Journal club paper presentation (#1)
+* Dr. Xavier Cheseto -  Lab tours, overview of sample collection and analysis
+* Dr. Dale Forrister - Analysis Part 1 - Chromatograms to Feature tables
+* Journal club paper presentation 1 - Wiggins et al. 2016
+
 #### Day 3 (26 October 2022)
-* Morning: Analysis Part 2 (Annotation), Analysis Part 3 (Multivariate Statistics)
-* Afternoon: Journal club paper presentation (#2), Poster presentations
+* Ruth Muthoni Kihika - Lecture - Machine Learning and Chemical Analysis
+* Dr. Dale Forrister - Lecture and Analysis Part 2 - Compound annotation and the power of MS/MS data
+* Journal club paper presentation 2 - Sedio et al. 2021
+* Poster presentations/"cocktail" hour
+
+## Items to bring
+* Printed poster
+* Personal laptop with programs installed as described below
 
 ## Pre-course requirements
 We have a lot of information to cover and just three days to do it. To maximize the value of this workshop, all participants are asked to do the following steps prior to attending the workshop:
