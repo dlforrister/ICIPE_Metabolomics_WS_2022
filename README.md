@@ -5,7 +5,7 @@ This workshop will provide training in metabolomic data analyses for graduate st
 
 ## Support for this workshop is provided by a grant from the JRS Biodiversity Foundation.
 
-     ![JRS Logo](/code/images/clone_github.png)
+      ![GitHub Logo](/code/images/JRSB_logo.jpg)
 
 
 
