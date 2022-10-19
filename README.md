@@ -16,7 +16,7 @@ www.icipe.org/about/guest-accomodation/duduville-international-guest-centre
 * Dr. Dale Forrister - Lecture - What is Metabolomics?
 * Introduction to Journal Club Activity
 * Dr. Dale Forrister - Lecture - A deep dive into the ecometabolomics workflow
-* Office hours -  review of R skills
+* Office hours -  Review of R skills
 
 #### Day 2 (25 October 2022)
 * Dr. Xavier Cheseto -  Lab tours, overview of sample collection and analysis
@@ -27,7 +27,7 @@ www.icipe.org/about/guest-accomodation/duduville-international-guest-centre
 * Ruth Kihika-Opanda - Lecture - Machine Learning and Chemical Analysis
 * Dr. Dale Forrister - Lecture and Analysis Part 2 - Compound annotation and the power of MS/MS data
 * Journal club paper presentation 2 - Sedio et al. 2021
-* Poster presentations/"cocktail" hour
+* Poster presentations/closing reception
 
 ## Items to bring
 * Printed poster
@@ -47,7 +47,7 @@ We have a lot of information to cover and just three days to do it. To maximize 
 2. Register for GNPS: https://gnps.ucsd.edu/ProteoSAFe/user/register.jsp
 
 3. Install Sirius https://bio.informatik.uni-jena.de/software/sirius/ 
-     - install the SIRIUS+CSI:FingerID GUI and CLI - Version 5.5.7 (2022-07-13) about halfway down the above page
+     - Install the SIRIUS+CSI:FingerID GUI and CLI - Version 5.5.7 (2022-07-13) about halfway down the above page
      - Once installed, start Sirius and follow the prompts to create an account using your academic/university email. The program is free to all academic users; however if they do not recognize your institution you may have to provide additional information to get access. 
      - Make sure to verify your email!
 4. CLONE this github repository and install required packages
