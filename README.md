@@ -11,9 +11,9 @@ www.icipe.org/about/guest-accomodation/duduville-international-guest-centre
 ## Schedule
 #### Day 1 (24 October 2022)
 * Morning (8am) : Participant introductions
-* Dr. Baldwyn Torto - Lecture - Why Chemistry Matters 
+* Dr. Baldwyn Torto - Lecture - What we know, and what we need to know about plant metabolimics.
 * Dr. Esther Kioko - Lecture - The diversity of butterflies in Taita Hills and their host plants: Any linking chemistry?
-* Dr. Dale Forrister - Lecture - What is Metabolomics?
+* Dr. Dale Forrister - Lecture - What is (eco)metabolomics?
 * Introduction to Journal Club Activity
 * Dr. Dale Forrister - Lecture - A deep dive into the ecometabolomics workflow
 * Office hours -  Review of R skills
