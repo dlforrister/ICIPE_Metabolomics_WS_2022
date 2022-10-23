@@ -1,12 +1,7 @@
 # Three Day Metabolomics Training Course (October 24-26, 2022)
 
 ## Description
-This workshop will provide training in metabolomic data analyses for graduate students and early-career scientists from sub-Saharan African, working on a variety of plant and animal species. Participants will gain skills for collecting, analyzing and sharing metabolomic data, focusing in particular on data analyses using freely available software. Participants will also gain scientific communication skills through paper discussions and a poster session. 
-
-## Support for this workshop is provided by a grant from the JRS Biodiversity Foundation.
-
-     ![JRS Logo](/code/images/clone_github.png)
-
+This workshop will provide training in metabolomic data analyses for graduate students and early-career scientists from sub-Saharan Africa, working on a variety of plant and animal species. Participants will gain skills for collecting, analyzing and sharing metabolomic data, focusing in particular on data analyses using freely available software. Participants will also gain scientific communication skills through paper discussions and a poster session. 
 
 
 ## Training Location
@@ -16,12 +11,12 @@ www.icipe.org/about/guest-accomodation/duduville-international-guest-centre
 ## Schedule
 #### Day 1 (24 October 2022)
 * Morning (8am) : Participant introductions
-* Dr. Baldwyn Torto - Lecture - Why Chemistry Matters? 
-* Dr. Esther Kioko - Lecture - Biodiversity and Chemistry
-* Dr. Dale Forrister - Lecture - What is Metabolomics?
+* Dr. Baldwyn Torto - Lecture - What we know, and what we need to know about plant metabolimics.
+* Dr. Esther Kioko - Lecture - The diversity of butterflies in Taita Hills and their host plants: Any linking chemistry?
+* Dr. Dale Forrister - Lecture - What is (eco)metabolomics?
 * Introduction to Journal Club Activity
 * Dr. Dale Forrister - Lecture - A deep dive into the ecometabolomics workflow
-* Office hours - time ot install programs, review of R skills
+* Office hours -  Review of R skills
 
 #### Day 2 (25 October 2022)
 * Dr. Xavier Cheseto -  Lab tours, overview of sample collection and analysis
@@ -29,10 +24,10 @@ www.icipe.org/about/guest-accomodation/duduville-international-guest-centre
 * Journal club paper presentation 1 - Wiggins et al. 2016
 
 #### Day 3 (26 October 2022)
-* Ruth Muthoni Kihika - Lecture - Machine Learning and Chemical Analysis
+* Ruth Kihika-Opanda - Lecture - Machine Learning and Chemical Analysis
 * Dr. Dale Forrister - Lecture and Analysis Part 2 - Compound annotation and the power of MS/MS data
 * Journal club paper presentation 2 - Sedio et al. 2021
-* Poster presentations/"cocktail" hour
+* Poster presentations/closing reception
 
 ## Items to bring
 * Printed poster
@@ -52,7 +47,7 @@ We have a lot of information to cover and just three days to do it. To maximize 
 2. Register for GNPS: https://gnps.ucsd.edu/ProteoSAFe/user/register.jsp
 
 3. Install Sirius https://bio.informatik.uni-jena.de/software/sirius/ 
-     - install the SIRIUS+CSI:FingerID GUI and CLI - Version 5.5.7 (2022-07-13) about halfway down the above page
+     - Install the SIRIUS+CSI:FingerID GUI and CLI - Version 5.5.7 (2022-07-13) about halfway down the above page
      - Once installed, start Sirius and follow the prompts to create an account using your academic/university email. The program is free to all academic users; however if they do not recognize your institution you may have to provide additional information to get access. 
      - Make sure to verify your email!
 4. CLONE this github repository and install required packages
@@ -87,3 +82,7 @@ We will be updating this gihub right up until the start of the course. We will m
      
 ### COVID Policies
 Participants should have proof of full COVID-19 vaccination prior to the workshop.
+
+
+## Support for this workshop is provided by a grant from the JRS Biodiversity Foundation.
+![GitHub Logo](/code/images/JRS_LOGO.png)
