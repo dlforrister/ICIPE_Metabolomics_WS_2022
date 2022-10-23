@@ -35,8 +35,10 @@ if (!requireNamespace("BiocManager", quietly=TRUE)) {
     install.packages("BiocManager")}
 
 
-if (!requireNamespace("xcms", quietly=TRUE)) { 
+if (!requireNamespace("xcms", quietly=TRUE)) {
+    BiocManager::install(version='devel')
     BiocManager::install("xcms")}
+
 
 library(xcms)
 
@@ -73,7 +75,7 @@ Many ions have the same or a very similar m/z making it difficult or impossible 
 
 Thus, the basic unit of LC-MS data is a scan, which corresponds to a mass spectrum at a specific time point. Each spectrum contains the relative abundance of each m/z (ion) at that specific instance or scan. LC-MS data is therefore a **time series of mass spectra**. By coupling the RT and the m/z values we are able to separate metabolites that would otherwise be indistinguishable based only on their m/z values.
 
-Understanding the what LC-MS data are is useful for the rest of this excersize, because the preprocessing steps of untargeted metbolomics analysis are specifically designed to convert a time series of spectra, into a feature x abundance matrix. Knowing the structure of the data makes setting key parameters much more intuitive.
+Understanding what LC-MS data are is useful for the rest of this excessive, because the preprocessing steps of untargeted metbolomics analysis are specifically designed to convert a time series of spectra, into a feature x abundance matrix. Knowing the structure of the data makes setting key parameters much more intuitive.
 
 ## **2.3 Definitions and common naming convention**
 
@@ -136,7 +138,7 @@ In the code block below we first define the location of the mzML files, which ar
 
 ```{r}
 
-datafiles <- list.files(here("data"),pattern = ".mzML",full.names = TRUE) 
+datafiles <- list.files(here("data","standards"),pattern = ".mzML",full.names = TRUE) 
 
 pd <- data.frame(file = basename(datafiles),
                  injection_idx = 1:5,
@@ -158,40 +160,7 @@ The MS experiment data is now represented as an `OnDiskMSnExp` object. Phenotype
 pData(rawData)
 ```
 
-## 3.2 Basic data access and visualization
-
-The MS data in an `OnDiskMSnExp` object is organized by spectrum (similar to *mzML* files), with `Spectrum` objects used as containers for the m/z and intensity values. General spectrum information can be retrieved using the `msLevel`, `centroided`, `rtime` or `polarity` functions that return the respective value for all spectra from all files.
-
-```{r}
-
-# Get the retention time of each scan
-head(rtime(rawData))
-
-
-
-
-```
-
-The `spectra` function can be used to retrieve the list of all spectra (from all files). This will load the full data from all raw files, which can take, depending on the size of the files and number of spectra, relatively long time and requires, depending on the experiment, a considerable amount of memory. In most cases we will however work with sub-sets of the data, and retrieving that can, in the case of indexed mzML, mzXML and CDF files, be very fast. Data objects can be subsetted using the filter functions: `filterFile`, `filterRtime`, `filterMz` or `filterMsLevel` that filter the data by file, retention time range, m/z range or MS level. To illustrate this we retrieve below all spectra measured between 372 and 373 seconds. These contain the signal from all compounds that eluted from the LC in that time window. Note that we use the pipe operator `%>%` from the `magrittr` package for better readability
-
-```{r}
-
-#' Get all spectra measured between 19 and 20 seconds
-#' Use %>% to avoid nested function calls
-sps <- rawData %>%
-    filterRt(rt = c(372, 373)) %>%
-    spectra 
-
-#The result is a list of Spectrum objects. Below we determine the number of spectra we have got
-length(sps)
-
-plot(sps[[2]]) 
-
-```
-
-We can immediately spot several mass peaks in the spectrum, with the largest one at a m/z of about 609, which matches the expected mass to charge ratio for the [M-H] ion (adduct) of Rutin. Rutin in its natural state is not charged and can therefore not be measured directly with a MS instrument. Uncharged compounds, such as Raffinose, have thus to be first ionized to create charged molecules (e.g. using electrospray-ionization as in the present data set). Such ionization would create [M-H]- ions of Rutin, i.e. molecules that consist of Rutin minus a hydrogen resulting in single charged ions (with a mass equal to the masses of Rutin minus hydrogen).
-
-## 3.3 **Chromatographic peak detection**
+## 3.2 **Chromatographic peak detection**
 
 Chromatographic peak detection aims to identify peaks along the retention time axis that represent the signal from individual compounds' ions.
 
@@ -415,7 +384,7 @@ chromPeaks(Trypt_chr)
 
 We can see that we will need a minimum SN of 3 in order for this peak to be detected.
 
-### 3.3.1 Peak Picking Exercise:
+### 3.2.1 Peak Picking Exercise:
 
 It's a good idea to test out these parameters with more peaks to make sure our peakpicking picks up all the peaks we are interested in.
 
@@ -639,9 +608,9 @@ rawData <- findChromPeaks(rawData, param = cwp)
 
 ```
 
-## [*3.4 retention time alignment:*]{.underline}
+## [*3.3 retention time alignment:*]{.underline}
 
-### [*3.4.1 Why do alignment?*]{.underline}
+### [*3.3.1 Why do alignment?*]{.underline}
 
 Thus far we have only looked at peaks from a single injection or file.
 
@@ -650,7 +619,11 @@ If we plot 4 of the standards for all 5 injections of the RTI we can see that th
 While chromatography helps to discriminate better between analyses it is also affected by variances that can lead to shifts in retention times between measurement runs. The alignment step aims to adjust these retention time differences between samples within an experiment.
 
 ```{r}
+
+
 register(SerialParam(), default=TRUE)
+
+
 bpc_raw <- chromatogram(rawData, aggregationFun = "max",rt = c(0, 700))
 plot(bpc_raw, peakType = "none")
 ```
@@ -804,7 +777,7 @@ plot(Dig_chr,peakType = "none", main="Digoxin")
 
 Now you can see all of these standards Align well.
 
-## **3.5 Correspondence (Peak Grouping)**
+## **3.4 Correspondence (Peak Grouping)**
 
 The final step of the LC-MS preprocessing with `xcms` is the correspondence analysis, in which chromatographic peaks from the same ion are grouped across samples to form a *feature*. `xcms` implements two methods for this purpose: *peak density* (Smith et al. 2006) and *nearest* (Katajamaa, Miettinen, and Oresic 2006) that can be configured by passing either a `PeakDensityParam` or a `NearestPeaksParam` object to the `groupChromPeaks` function. For our example we use the *peak density* method that iterates through m/z slices in the data and groups chromatographic peaks to features in each slice (within the same or across samples) depending on their retention time and the distribution of chromatographic peaks along the retention time axis. Peaks representing signal from the same ion are expected to have a similar retention time and, if found in many samples, this should also be reflected by a higher peak density at the respective retention time.
 
@@ -875,7 +848,7 @@ rawData <- groupChromPeaks(rawData, param = pdp)
 
 ```
 
-## 3.6 Gap Filling
+## 3.5 Gap Filling
 
 Results from the correspondence analysis can be accessed with the `featureDefinition` function. This function returns a data frame with the retention time and m/z ranges of the apex positions from the peaks assigned to the feature and their respective indices in the `chromPeaks` matrix.
 

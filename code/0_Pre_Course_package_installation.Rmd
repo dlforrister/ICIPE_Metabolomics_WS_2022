@@ -94,3 +94,17 @@ then we can build file paths relative to this starting point using "," between f
 here("data","standards","RN18_50_222.mzML")
 
 ```
+
+## Last minute update - please install by Oct 23
+
+```{r}
+#New for this tutorial is the pheatmaps package
+if (!require(pheatmap)) {install.packages('pheatmap')}
+library(pheatmap)
+
+if (!require(multtest)) {BiocManager::install("multtest")}
+library(multtest)
+
+if (!require(SummarizedExperiment)) {install.packages('pheatmap')}
+library(SummarizedExperiment)
+```

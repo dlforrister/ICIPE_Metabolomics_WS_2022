@@ -1,0 +1,321 @@
+---
+title: "Feature Table Visualization and foldchange analsys between treatmemnts"
+author: "Dale L. Forrister"
+affiliation: "School of Biological Sciences, University of Utah"
+date: "9/16/2022"
+contact: "dlforrister@gmail.com"
+output: html_document
+---
+
+# **1.0 Goals**
+
+In the previous exercise we worked through settings parameters for XCMS when processing LC-MS raw data files into feature abundance tables. In this exercise we will process a small set of LC-MS data compare feature expression between treatment groups and visualize differences between samples.
+
+This exercise has been adapted a tutorial published by Johannes Rainer in 2022 LCMS data preprocessing and analysis with xcms (<https://bioconductor.org/packages/devel/bioc/vignettes/xcms/inst/doc/xcms.html#2_Data_import>)
+
+**The Metabolomics online platform MetaboAnalyst (<https://www.metaboanalyst.ca/home.xhtml>) is a very good source for human health or treatment based analysis.**
+
+**2.0 Required Packages**
+
+Most packages used in metabolomics are maintained via Bioconductor, and thus need to be installed with "BiocManager"
+
+The analysis in this document requires an R version \>= 4.0.0 and recent versions of the MSnbase and xcms (version \>= 3.11.3 is needed) packages. The packages can be installed with:
+
+```{r packages, include=FALSE}
+
+if (!requireNamespace("BiocManager", quietly=TRUE)) { 
+    install.packages("BiocManager")}
+
+
+if (!requireNamespace("xcms", quietly=TRUE)) {
+    BiocManager::install(version='devel')
+    BiocManager::install("xcms")}
+
+
+library(xcms)
+
+
+#Load required libraries and utility functions for GNPS export.
+
+library(xcms)
+source("https://raw.githubusercontent.com/jorainer/xcms-gnps-tools/master/customFunctions.R")
+
+
+```
+
+In this tutorial we will also use the here package in order to simplify file paths when working with R projects and R markdown files.
+
+```{r filepaths, include=FALSE}
+if (!require(dplyr)) {install.packages('dplyr')}
+
+library(dplyr)
+
+if (!require(here)) {install.packages('here')}
+
+library(here)
+here()
+
+#New for this tutorial is the pheatmaps package
+if (!require(pheatmap)) {install.packages('pheatmap')}
+library(pheatmap)
+
+if (!require(multtest)) {BiocManager::install("multtest")}
+library(multtest)
+
+if (!require(SummarizedExperiment)) {install.packages('pheatmap')}
+library(SummarizedExperiment)
+```
+
+# 3.0 Process LC-MS data
+
+## 3.1 Load the data
+
+In this tutorial we will work data available in the "faahKO" package. They can be downloaded using: library(faahKO). I have downloaded them in "/data/" for convenience.
+
+Load all .CDF files and define sample grouping. Note, in other exercises we worked with .mxML data, which is a more widely used open file format. `xcms` supports analysis of LC/MS data from files in (AIA/ANDI) NetCDF, mzXML and mzML
+
+This data set contains the LC/MS peaks from the spinal cords of 4 wild-type and 4 FAAH knockout mice collected in positive ionization mode.
+
+Thus, we want to group the samples into knockout and wild type.
+
+```{r}
+
+datafiles <- list.files(here("data", "faahKO_comparisons" ),pattern = ".CDF",full.names = TRUE) 
+
+pheno <- data.frame(sample_name = sub(basename(datafiles), pattern = ".CDF",
+                                   replacement = "", fixed = TRUE),
+                 sample_group = c(rep("KO", 4), rep("WT", 4)),
+                 stringsAsFactors = FALSE)
+```
+
+```{r}
+head(pheno)
+
+
+
+```
+
+```{r}
+rawData <- readMSData(files = datafiles, pdata = new("NAnnotatedDataFrame", pheno),
+                       mode = "onDisk")
+
+```
+
+per the warning we can set the polarity 0L for negative and 1L for positive.
+
+```{r}
+fData(rawData)$polarity <- 1L
+```
+
+Create a base peak chromatogram (BPC) of your data for visual inspection.
+
+```{r, fig.width = 12, fig.height - 6, fig.cap = "Base peak chromatogram"}
+## Get the base peak chromatograms. This reads data from the files.
+bpis <- chromatogram(rawData, aggregationFun = "max")
+## Define colors for the two groups
+group_colors <- c("Red","Blue")
+names(group_colors) <- c("KO", "WT")
+
+## Plot all chromatograms.
+plot(bpis, col = group_colors[rawData$sample_group])
+
+```
+
+The `chromatogram` method supports also extraction of chromatographic data from a m/z-rt slice of the MS data. In the next section we will use this method to create an extracted ion chromatogram (EIC) for a selected peak.
+
+Note that `chromatogram` reads the raw data from each file to calculate the chromatogram. The `bpi` and `tic` methods on the other hand do not read any data from the raw files but use the respective information that was provided in the header definition of the input files (which might be different from the actual data).
+
+Below we create boxplots representing the distribution of total ion currents per file. Such plots can be very useful to spot problematic or failing MS runs.
+
+```{r}
+tc <- split(tic(rawData), f = fromFile(rawData))
+boxplot(tc, col = group_colors[rawData$sample_group],
+        ylab = "intensity", main = "Total ion current")
+
+```
+
+Also, we can cluster the samples based on similarity of their base peak chromatogram. This can also be helpful to spot potentially problematic samples in an experiment or generally get an initial overview of the sample grouping in the experiment. Since the retention times between samples are not exactly identical, we use the `bin` function to group intensities in fixed time ranges (bins) along the retention time axis. In the present example we use a bin size of 1 second, the default is 0.5 seconds. The clustering is performed using complete linkage hierarchical clustering on the pairwise correlations of the binned base peak chromatograms.
+
+```{r}
+## Bin the BPC
+bpis_bin <- MSnbase::bin(bpis, binSize = 2)
+
+## Calculate correlation on the log2 transformed base peak intensities
+cormat <- cor(log2(do.call(cbind, lapply(bpis_bin, intensity))))
+colnames(cormat) <- rownames(cormat) <- rawData$sample_name
+
+## Define which phenodata columns should be highlighted in the plot
+ann <- data.frame(group = rawData$sample_group)
+rownames(ann) <- rawData$sample_name
+
+## Perform the cluster analysis
+pheatmap(cormat, annotation = ann,
+         annotation_color = list(group = group_colors))
+```
+
+The samples cluster in a pairwise manner, the KO and WT samples for the sample index having the most similar BPC
+
+## 3.2 Peak picking
+
+Define settings for the centWave peak detection.
+
+Perform the chromatographic peak detection.
+
+```{r}
+
+cwp <- CentWaveParam(peakwidth = c(20, 80), noise = 5000,
+                     prefilter = c(6, 5000))
+
+processedData <- findChromPeaks(rawData, param = cwp)
+
+```
+
+Get an overview of the detected peaks, using a heatmap which represents the number of peaks detected for each file along the retention time range.
+
+```{r, fig.width = 10, fig.height = 6}
+plotChromPeakImage(processedData, binSize = 10) 
+```
+
+## 3.3 Retention time alignment
+
+The time at which analytes elute in the chromatography can vary between samples (and even compounds). Such a difference was already observable in the extracted ion chromatogram plot shown as an example in the previous section. The alignment step, also referred to as retention time correction, aims at adjusting this by shifting signals along the retention time axis to align the signals between different samples within an experiment.
+
+A plethora of alignment algorithms exist (see [3]), with some of them being implemented also in xcms. The method to perform the alignment/retention time correction in xcms is adjustRtime which uses different alignment algorithms depending on the provided parameter class.
+
+In the example below we use the obiwarp method [4] to align the samples. We use a binSize = 0.6 which creates warping functions in mz bins of 0.6. Also here it is advisable to modify the settings for each experiment and evaluate if retention time correction did align internal controls or known compounds properly.
+
+```{r}
+processedData <- adjustRtime(processedData, param = ObiwarpParam(binSize = 0.6))
+
+```
+
+Vislualize after RT alignment
+
+```{r}
+bpis_adj <- chromatogram(processedData, aggregationFun = "max", include = "none")
+par(mfrow = c(2, 1), mar = c(4.5, 4.2, 1, 0.5))
+plot(bpis_adj, col = group_colors[bpis_adj$sample_group])
+## Plot also the difference of adjusted to raw retention time.
+plotAdjustedRtime(processedData, col = group_colors[processedData$sample_group])
+```
+
+Obiwarp aligned data Base peak chromatogram after alignment (top) and difference between adjusted and raw retention times along the retention time axis (bottom).
+
+## 3.4 Peak grouping
+
+Define the parameters for the *peak density*-based peak grouping (correspondence analysis).
+
+```{r}
+
+pdp <- PeakDensityParam(sampleGroups = processedData$sample_group,
+                        minFraction = 0.10)
+processedData <- groupChromPeaks(processedData, param = pdp)
+
+```
+
+## **3.4 Correspondence (Peak Grouping)**
+
+```{r}
+
+pdp <- PeakDensityParam(sampleGroups = processedData$sample_group,
+                        minFraction = 0.4, bw = 30)
+processedData <- groupChromPeaks(processedData, param = pdp) 
+
+```
+
+## 3.5 Gap filling
+
+Fill-in missing peaks. Peak detection might have failed for some features in some samples. The `fillChromPeaks` function allows to integrate for such cases all signal in the respective m/z - retention time range. Below we first define the median width of identified chromatographic peaks in retention time dimension and use this as parameter `fixedRt` for the `fillChromPeaks`.
+
+```{r}
+
+## Missing values before filling in peaks
+apply(featureValues(processedData), MARGIN = 2,
+      FUN = function(z) sum(is.na(z)))
+```
+
+```{r}
+
+
+processed_Data <- fillChromPeaks(processedData, param = ChromPeakAreaParam())
+
+```
+
+```{r}
+## Missing values after filling in peaks
+apply(featureValues(processedData), MARGIN = 2,
+      FUN = function(z) sum(is.na(z)))
+```
+
+# 4.0 Visualizing samples
+
+## 4.1 We can group samples in multivariate space using a PCA.
+
+Results from the xcms-based preprocessing can be summarized into a `SummarizedExperiment` object from the [*SummarizedExperiment*](https://bioconductor.org/packages/3.16/SummarizedExperiment) package with the `quantify` method. This object will contain the feature abundances as the *assay matrix*, the feature definition (their m/z, retention time and other metadata) as `rowData` (i.e. row annotations) and the sample/phenotype information as `colData` (i.e. column annotations). All the processing history will be put into the object's `metadata`. This object can then be used for any further (`xcms`-independent) processing and analysis.
+
+Below we use `quantify` to generate the result object for the present analysis. The parameters `value` and any other additional parameters are passed along to the `featureValues` method that is used internally to create the feature abundance matrix.
+
+```{r}
+
+
+res <- quantify(processed_Data, value = "into")
+assays(res)$raw_filled <- featureValues(processed_Data, filled = TRUE)
+
+## Extract the features and log2 transform them
+ft_ints <- log2(assay(res, "raw_filled"))
+
+## Perform the PCA omitting all features with an NA in any of the
+## samples. Also, the intensities are mean centered.
+pc <- prcomp(t(na.omit(ft_ints)), center = TRUE)
+
+## Plot the PCA
+cols <- group_colors[processed_Data$sample_group]
+pcSummary <- summary(pc)
+plot(pc$x[, 1], pc$x[,2], pch = 21, main = "",
+     xlab = paste0("PC1: ", format(pcSummary$importance[2, 1] * 100,
+                                   digits = 3), " % variance"),
+     ylab = paste0("PC2: ", format(pcSummary$importance[2, 2] * 100,
+                                   digits = 3), " % variance"),
+     col = "darkgrey", bg = cols, cex = 2)
+grid()
+text(pc$x[, 1], pc$x[,2], labels = processed_Data$sample_name, col = "darkgrey",
+     pos = 3, cex = 2)
+```
+
+We can see from this plot that most of the difference occurs on the PC1 Axis, but our treatments are not very different. Rather they group by their samples.
+
+## 4.2 Which features are the most different between treatments?
+
+The diffreport. We have two treatment groups and we want to know which features are most different between them. We can use xcms to generate a diffreport for this. First we must convert the "XCMSexp" object into an "xcmsSET" object.
+
+```{r}
+
+xset <- as(processedData, "xcmsSet")
+
+#this removes sample groups so we can add them back in from our pheno object
+sampclass(xset) <- pheno$sample_group
+
+
+diffreport_xset <- xcms::diffreport(
+        object=xset,
+        class1="KO",
+        class2="WT",
+        filebase="KO-vs-WT",
+        eicmax=200,
+        eicwidth=200,
+        sortpval=TRUE,
+        value="into",
+        h=480,
+        w=640,
+        mzdec=2,
+        missing=0)
+
+diffreport_xset
+
+```
+
+The first part of the diffreport lists the feature information. The second shows the number of samples that feature was found in total and within each sample group. Then the amount in each sample is listed.
+
+Note, many of the fold changes are Inf - this is because they are missing from one of the two groups.
+
+In general diff reports reveal a LOT of false positives, meaning things appears to be significantly different without much biological meaning. This is partly because they are VERY sensitive to machine/technical variation and they can only really be applied between samples which share a lot of peaks. This is most often the case when comparing time points or treatment groups.
