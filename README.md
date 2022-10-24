@@ -11,7 +11,7 @@ www.icipe.org/about/guest-accomodation/duduville-international-guest-centre
 ## Schedule
 #### Day 1 (24 October 2022)
 * Morning (8am) : Participant introductions
-* Dr. Baldwyn Torto - Lecture - What we know, and what we need to know about plant metabolimics.
+* Dr. Baldwyn Torto - Lecture - Why chemistry matters.
 * Dr. Esther Kioko - Lecture - The diversity of butterflies in Taita Hills and their host plants: Any linking chemistry?
 * Dr. Dale Forrister - Lecture - What is (eco)metabolomics?
 * Introduction to Journal Club Activity
@@ -24,7 +24,7 @@ www.icipe.org/about/guest-accomodation/duduville-international-guest-centre
 * Journal club paper presentation 1 - Wiggins et al. 2016
 
 #### Day 3 (26 October 2022)
-* Ruth Kihika-Opanda - Lecture - Machine Learning and Chemical Analysis
+* Ruth Kihika-Opanda - Lecture - Machine learning and statistical methods for analyzing chemical data
 * Dr. Dale Forrister - Lecture and Analysis Part 2 - Compound annotation and the power of MS/MS data
 * Journal club paper presentation 2 - Sedio et al. 2021
 * Poster presentations/closing reception
