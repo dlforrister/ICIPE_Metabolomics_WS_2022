@@ -141,7 +141,7 @@ In the code block below we first define the location of the mzML files, which ar
 datafiles <- list.files(here("data","standards"),pattern = ".mzML",full.names = TRUE) 
 
 pd <- data.frame(file = basename(datafiles),
-                 injection_idx = 1:5,
+                 injection_idx = 1:4,
                  sample = gsub(".mzML","",basename(datafiles)),
                  group = "RTI")
 
