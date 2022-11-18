@@ -141,7 +141,7 @@ In the code block below we first define the location of the mzML files, which ar
 datafiles <- list.files(here("data","standards"),pattern = ".mzML",full.names = TRUE) 
 
 pd <- data.frame(file = basename(datafiles),
-                 injection_idx = 1:4,
+                 injection_idx = 1:5,
                  sample = gsub(".mzML","",basename(datafiles)),
                  group = "RTI")
 
@@ -783,39 +783,14 @@ The final step of the LC-MS preprocessing with `xcms` is the correspondence anal
 
 To illustrate this we extract below an m/z slice containing the Rutin peak and use the `plotChromPeakDensity` function to visualize the distribution of peaks along the retention time axis and to *simulate* a correspondence analysis based on the provided settings.
 
+We can start with the default parameters and see how they work
+
 ```{r}
-
-
 #' Get default parameters for the grouping
 pdp <- PeakDensityParam(sampleGroups = pData(rawData)$group)
 
-bpc_rutin <- chromatogram(rawData, mz = c(289.06, 289.08),
-                           aggregationFun = "max")
-
-#' Dry-run correspondence and show the results.
-plotChromPeakDensity(bpc_rutin, param = pdp)
-
-
+pdp
 ```
-
-```{r}
-
-#' Get default parameters for the grouping
-pdp <- PeakDensityParam(sampleGroups = pData(rawData)$group)
-
-bpc_glyc <- chromatogram(rawData, mz = c(821.3, 821.5),rt = c(500, 700),
-                           aggregationFun = "max")
-
-#' Dry-run correspondence and show the results.
-plotChromPeakDensity(bpc_glyc, param = pdp)
-
-```
-
-```{r}
-
-```
-
-The upper panel in the plot above shows the chromatographic data with the identified peaks. The lower panel shows the retention time of identified peaks (x-axis) per sample (y-axis) with the black solid line representing their distribution along the x-axis. Peak groups (features) are indicated with grey rectangles. The peak density correspondence method groups all chromatographic peaks under the same *density peak* into a feature. With the default settings we were able to group the Rutin peak of each sample into a feature. The parameters for the peak density correspondence analysis are:
 
 -   `binSize`: m/z width of the bin/slice of data in which peaks are grouped.
 
@@ -827,19 +802,193 @@ The upper panel in the plot above shows the chromatographic data with the identi
 
 -   `minSamples`: minimum number of samples a peak has to be present.
 
-The parameters `minFraction` and `minSamples` depend on the experimental layout and should be set accordingly. `binSize` should be set to a small enough value to avoid peaks from different ions, but with similar m/z and retention time, being grouped together. The most important parameter however is `bw` and, while its default value of 30 was able to correctly group the Serine peaks, it should always be evaluated on other, more complicated, signals too. Below we evaluate the performance of the default parameters on an m/z slice that contains signal from multiple ions with the same m/z, including isomers Betaine and Valine ([M+H]+ m/z 118.08625).
+The parameters `minFraction` and `minSamples` depend on the experimental layout and should be set accordingly. `binSize` should be set to a small enough value to avoid peaks from different ions, but with similar m/z and retention time, being grouped together. The most important parameter however is `bw` and, while its default value of 30 was able to correctly group the Serine peaks, it should always be evaluated on other, more complicated, signals too. Below we evaluate the performance of the default parameters on an m/z slice that contains signal from multiple ions with the same m/z.
 
 ```{r}
-pdp <- PeakDensityParam(sampleGroups = pData(rawData)$group, bw=4, binSize=0.25, minSamples=1, minFraction = 0.001)
 
-bpc_glyc <- chromatogram(rawData, mz = c(821.3, 821.5),rt = c(500, 700),aggregationFun = "max")
-
+bpc_raff <- chromatogram(rawData, mz = c(503.1, 503.2),rt = c(0, 100),
+                           aggregationFun = "max")
 #' Dry-run correspondence and show the results.
-plotChromPeakDensity(bpc_glyc, param = pdp)
+plotChromPeakDensity(bpc_rutin, param = pdp)
+```
+
+The upper panel in the plot above shows the chromatographic data with the identified peaks. The lower panel shows the retention time of identified peaks (x-axis) per sample (y-axis) with the black solid line representing their distribution along the x-axis. Peak groups (features) are indicated with grey rectangles. The peak density correspondence method groups all chromatographic peaks under the same *density peak* into a feature. With the default settings we were able to group the Rutin peak of each sample into a feature.
+
+First we extract all of the compounds within a window.
+
+```{r}
+
+
+bpc_trypt <- chromatogram(rawData, mz = c(203.0, 203.2),rt = c(100, 500),
+                           aggregationFun = "max")
+bpc_camphor <- chromatogram(rawData, mz = c(231.0, 231.1),rt = c(200, 400),
+                           aggregationFun = "max")
+bpc_epic <- chromatogram(rawData, mz = c(289.0, 289.15),rt = c(200, 500),
+                           aggregationFun = "max")
+bpc_rutin <- chromatogram(rawData, mz = c(609.1, 609.2),rt = c(350, 500),
+                           aggregationFun = "max")
+bpc_morin <- chromatogram(rawData, mz = c(301.0, 301.1),rt = c(400, 600),
+                           aggregationFun = "max")
+bpc_digoxin <- chromatogram(rawData, mz = c(825.35, 825.45),rt = c(550, 700),
+                           aggregationFun = "max")
+bpc_glyc <- chromatogram(rawData, mz = c(821.35, 821.45),rt = c(500, 750),
+                           aggregationFun = "max")
+
+plot(bpc_raff)
+plot(bpc_trypt)
+plot(bpc_camphor)
+plot(bpc_epic)
+plot(bpc_rutin)
+plot(bpc_morin)
+plot(bpc_digoxin)
+plot(bpc_glyc)
+
 
 ```
 
-Despite being very close, chromatographic peaks of isomers were successfully grouped into separate features.
+Now we look at the denisty plot of each one to asses grouping paramaters
+
+Run each set of 3 lines individually and then look at the two outputs.
+
+```{r}
+
+#' Dry-run correspondence and show the results.
+plotChromPeakDensity(bpc_raff, param = pdp)
+bpc_raff <- groupChromPeaks(bpc_raff, param = pdp) 
+featureDefinitions(bpc_raff)[1:6]
+
+#defult parameters work well - single peak, accurate mass
+
+plotChromPeakDensity(bpc_trypt, param = pdp)
+bpc_trypt <- groupChromPeaks(bpc_trypt, param = pdp) 
+featureDefinitions(bpc_trypt)[1:6]
+
+
+#defult parameters work well - seperates two peaks, accurate mass
+
+plotChromPeakDensity(bpc_camphor, param = pdp)
+bpc_camphor <- groupChromPeaks(bpc_camphor, param = pdp) 
+featureDefinitions(bpc_camphor)[1:6]
+
+
+#defult parameters work well - single peak, accurate mass
+
+plotChromPeakDensity(bpc_epic, param = pdp)
+bpc_epic <- groupChromPeaks(bpc_epic, param = pdp) 
+featureDefinitions(bpc_epic)[1:6]
+
+
+#defult parameters work well - three peaks are seperating well, accurate mass
+
+plotChromPeakDensity(bpc_rutin, param = pdp)
+bpc_rutin <- groupChromPeaks(bpc_rutin, param = pdp) 
+featureDefinitions(bpc_rutin)[1:6]
+
+
+#defult parameters work well - single peak, accurate mass
+
+plotChromPeakDensity(bpc_morin, param = pdp)
+bpc_morin <- groupChromPeaks(bpc_morin, param = pdp) 
+featureDefinitions(bpc_morin)[1:6]
+
+
+#defult parameters work ok - it's grouping in some small baseline peaks together, but they are so low abundance probably doesn't matter, accurate mass
+
+plotChromPeakDensity(bpc_digoxin, param = pdp)
+bpc_digoxin <- groupChromPeaks(bpc_digoxin, param = pdp) 
+featureDefinitions(bpc_digoxin)[1:6]
+
+
+#defult parameters work well - two peak, accurate mass
+
+plotChromPeakDensity(bpc_glyc, param = pdp)
+bpc_glyc <- groupChromPeaks(bpc_glyc, param = pdp) 
+featureDefinitions(bpc_glyc)[1:6]
+
+
+#defult parameters does not work - it is grouping together two seperate peaks
+
+# we can adjust BW to fix this.
+
+```
+
+we can adjust bw from 25 to smaller values. This will separate masses that are close in time.
+
+```{r}
+#we have to go all the way down to BW = 4 before these two peaks will separate
+pdp <- PeakDensityParam(sampleGroups = pData(rawData)$group, bw=4, binSize=0.25, minSamples=1, minFraction = 0.001)
+
+
+plotChromPeakDensity(bpc_glyc, param = pdp)
+bpc_glyc <- groupChromPeaks(bpc_glyc, param = pdp) 
+featureDefinitions(bpc_glyc)[1:6]
+```
+
+Do these new params still work for the rest of peaks?
+
+```{r}
+
+#' Dry-run correspondence and show the results.
+plotChromPeakDensity(bpc_raff, param = pdp)
+bpc_raff <- groupChromPeaks(bpc_raff, param = pdp) 
+featureDefinitions(bpc_raff)[1:6]
+
+#narrow parameters work well - single peak, accurate mass
+
+plotChromPeakDensity(bpc_trypt, param = pdp)
+bpc_trypt <- groupChromPeaks(bpc_trypt, param = pdp) 
+featureDefinitions(bpc_trypt)[1:6]
+
+
+#narrow parameters work well - seperates two peaks, accurate mass
+
+plotChromPeakDensity(bpc_camphor, param = pdp)
+bpc_camphor <- groupChromPeaks(bpc_camphor, param = pdp) 
+featureDefinitions(bpc_camphor)[1:6]
+
+#default paramateres over split this large peak- would need a BW of 10 to NOT split it.
+#unfortuneatly this is a trade off. I think it's better to over split a peak than to groupt together two clearly destinct peaks. At least when a peak is over split, the main feature/peak will be included in all samples and the other over split features are low abundance and won't contribute much to the analysis.
+
+plotChromPeakDensity(bpc_epic, param = pdp)
+bpc_epic <- groupChromPeaks(bpc_epic, param = pdp) 
+featureDefinitions(bpc_epic)[1:6]
+
+
+#narrow parameters work well - three peaks are seperating well, accurate mass
+
+plotChromPeakDensity(bpc_rutin, param = pdp)
+bpc_rutin <- groupChromPeaks(bpc_rutin, param = pdp) 
+featureDefinitions(bpc_rutin)[1:6]
+
+
+#narrow parameters work well - single peak, accurate mass
+
+plotChromPeakDensity(bpc_morin, param = pdp)
+bpc_morin <- groupChromPeaks(bpc_morin, param = pdp) 
+featureDefinitions(bpc_morin)[1:6]
+
+
+#narrow parameters work ok - it's grouping in some small baseline peaks together, but they are so low abundance probably doesn't matter, accurate mass
+
+plotChromPeakDensity(bpc_digoxin, param = pdp)
+bpc_digoxin <- groupChromPeaks(bpc_digoxin, param = pdp) 
+featureDefinitions(bpc_digoxin)[1:6]
+
+
+#narrow parameters work well - two peak, accurate mass
+
+plotChromPeakDensity(bpc_glyc, param = pdp)
+bpc_glyc <- groupChromPeaks(bpc_glyc, param = pdp) 
+featureDefinitions(bpc_glyc)[1:6]
+
+
+#narrow parameters work well - it splits the  two seperate peaks
+
+#it's a trade off with comnforsulfonic acid, because a BW of 10 is too broad to split these peaks.
+
+```
+
+Next we group all features accross the dataset using these newly defined paramaters.
 
 ```{r}
 pdp <- PeakDensityParam(sampleGroups = pData(rawData)$group, bw=4, binSize=0.25, minSamples=1, minFraction = 0.001)
@@ -854,7 +1003,7 @@ Results from the correspondence analysis can be accessed with the `featureDefini
 
 ```{r}
 #' Definition of the features
-featureDefinitions(rawData) 
+
 ```
 
 The final result from the LC-MS data preprocessing is a matrix with feature abundances, rows being features, columns samples. Such a matrix can be extracted with the `featureValues` function from the result object (see further below for an alternative, preferred way to extract preprocessing results with the `quantify` method). The function takes two additional parameters `value` and `method`: `value` defines the column in the `chromPeaks` table that should be reported in the matrix, and `method` the approach to handle cases in which more than one peak in a sample is assigned to the feature.
