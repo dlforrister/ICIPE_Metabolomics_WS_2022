@@ -137,11 +137,11 @@ Data were acquired on a Waters Xevo G2 QToF coupled to an Waters Acquity I-Class
 In the code block below we first define the location of the mzML files, which are part of the `msdata` package. We also define a `data.frame` describing the samples/experiment and pass this to the `readMSData` function which imports the data. The option `mode = "onDisk"` tells the function to read only general metadata into memory. The m/z and intensity values are not imported but retrieved from the original files on demand, which enables also analyses of very large experiments.
 
 ```{r}
-
+register(SerialParam(), default=TRUE)
 datafiles <- list.files(here("data","standards"),pattern = ".mzML",full.names = TRUE) 
 
 pd <- data.frame(file = basename(datafiles),
-                 injection_idx = 1:5,
+                 injection_idx = 1:7,
                  sample = gsub(".mzML","",basename(datafiles)),
                  group = "RTI")
 
@@ -307,6 +307,26 @@ plot(Trypt_chr)
 
 The intensity of Tryptophan only rises to about 20,000. We know it is not noise because we added it to our mix of standards, and thus should be able to detect it. To do so we're going to have to adjust the signal intensity parameters `noise` and `snthresh`
 
+We can adjust the signal to noise threshold parameter and see if we can pick it up.
+
+If we adjust snthreth we see that the only way to pick up the whole peak is to set it to zero. This is fine, we just have to rely on other parameters to filter out noise.
+
+We also have to adjust the width of the peak because this is a wider peak
+
+```{r}
+
+cwp <- CentWaveParam(peakwidth = c(4, 10),ppm=15, integrate = 2, snthresh = 0)
+
+
+Trypt_chr <- findChromPeaks(Trypt_chr, param = cwp)
+
+#' Plot the data and higlight identified peak area
+plot(Trypt_chr)
+
+```
+
+We can change the `noise` and the `prefilter` parameters to exclude baseline peaks.
+
 `noise` relates to the minimum intensity required for centroids to be considered in the first analysis step (centroids with intensity `< noise` are omitted from ROI detection). Effectively, we need to know the baseline value of mass spectrometer where peaks are only noise.
 
 To see the baseline we can look at an area where no peaks exist. Between Tryptophan and Camphorsulfonic Acid there is a large gap with no peaks (200 to 225 seconds)
@@ -341,15 +361,22 @@ plot(sps[[1]])
 
 ```
 
-Even the smaller peaks come out at around 2500.
+Tryptophan has a TIC fo 20,000 in a single scan
 
-A very conservative threshold for the `noise` parameter can therefor be 500.
+Even the smaller peaks come out at around 2500 in a single scan, and are approaching the baseline much below that.
 
-Lets apply this and test if we pick up Ttrypophan
+To differentiate noise from a true peak, we can use the prefilter to exclude peaks that don't have a certain threshold in n number of consecutive scans.
+
+prefilter = c(5,5000)
+
+will exclude any peaks that don't have a TIC of 5,000 in 5 consecative scans.
+
+Lets apply this and test if we pick up Tryptophan
 
 ```{r}
 
-cwp <- CentWaveParam(peakwidth = c(3, 10), integrate = 2, noise = 500)
+cwp <- CentWaveParam(peakwidth = c(3, 10), integrate = 2,snthresh = 0,noise = 1500, prefilter = c(5,2000))
+
 
 
 Trypt_chr <- findChromPeaks(Trypt_chr, param = cwp)
@@ -360,25 +387,7 @@ plot(Trypt_chr)
 
 ```
 
-Unfortunately, no peaks were detected. We can adjust the signal to noise threshold parameter and see if we can pick it up. For simplicity. We will set it to 0 and then use the chromPeaks() function to see what snthresh value was read.
-
-We also have to adjust the width of the peak because this is a wider peak
-
 ```{r}
-
-cwp <- CentWaveParam(peakwidth = c(4, 10),ppm=15, integrate = 2, noise = 2, snthresh = 0)
-
-
-Trypt_chr <- findChromPeaks(Trypt_chr, param = cwp)
-
-#' Plot the data and higlight identified peak area
-plot(Trypt_chr)
-
-```
-
-```{r}
-
-chromPeaks(Trypt_chr)
 
 ```
 
@@ -391,7 +400,7 @@ It's a good idea to test out these parameters with more peaks to make sure our p
 Use the following chunks of code to fill out the rest of this table with appriate values.
 
 |      Compound Name      | retention time (S) | m/z (M-H) | Peak Width (s) | Average PPM error | SN Ratio |            Notes            |
-|:-----------------------:|:------------------:|:---------:|:--------------:|:-----------------:|:--------:|:---------------------------:|
+|:---------:|:---------:|:---------:|:---------:|:---------:|:---------:|:---------:|
 |        Raffinose        |         20         | 503.1618  |                |                   |          | This is a very narrow peak! |
 |       Tryptophan        |       141.6        | 203.0826  |      3-4       |        14         |    3     |                             |
 |  Camphorsulfonic acid   |     230 to 250     | 231.0697  |                |                   |          |  This is a very wide peak!  |
@@ -405,7 +414,7 @@ Use the following chunks of code to fill out the rest of this table with appriat
 
 
 #starting parameters
-cwp <- CentWaveParam(peakwidth = c(2, 10), ppm=15, integrate = 2, noise=500, snthresh=0)
+cwp <- CentWaveParam(peakwidth = c(2, 10), ppm=15, integrate = 2, snthresh=0,noise = 1500, prefilter = c(5,2000))
 
 #adjust the RT and MZ windows to visualize Raffinose, Camphorsulfonic acid and Epicatichan
 rt_min = 15
@@ -454,7 +463,7 @@ head(diff(single_peak_chr_df$mz) * 1e6 / mean(single_peak_chr_df$mz),40)
 ```{r}
 
 #starting parameters
-cwp <- CentWaveParam(peakwidth = c(2, 10), ppm=15, integrate = 2, noise=500, snthresh=0)
+cwp <- CentWaveParam(peakwidth = c(2, 10), ppm=15, integrate = 2, snthresh=0,noise = 1500, prefilter = c(5,2000))
 
 #adjust the RT and MZ windows to visualize Raffinose, Camphorsulfonic acid and Epicatichan
 rt_min = 225
@@ -492,6 +501,18 @@ print("")
 print("")
 head(diff(single_peak_chr_df$mz) * 1e6 / mean(single_peak_chr_df$mz),40)
 
+
+```
+
+Here we identify everything but it split the peak into 2 chunks. In order to not split them we need a value of 4 and that will not allow us to pick of trypt and some of the other Peaks.
+
+\
+Alternatively we can use the function MergeNeighboringPeaks
+
+```{r}
+mpp <- MergeNeighboringPeaksParam(expandRt = 2)
+single_peak_chr <- refineChromPeaks(single_peak_chr, param = mpp)
+plot(single_peak_chr)
 ```
 
 **Epicatichan:**
@@ -499,10 +520,10 @@ head(diff(single_peak_chr_df$mz) * 1e6 / mean(single_peak_chr_df$mz),40)
 ```{r}
 
 #starting parameters
-cwp <- CentWaveParam(peakwidth = c(2, 10), ppm=15, integrate = 2, noise=500, snthresh=0)
+cwp <- CentWaveParam(peakwidth = c(2, 10), ppm=15, integrate = 2, snthresh=0,noise = 1500, prefilter = c(5,2000))
 
 #adjust the RT and MZ windows to visualize Raffinose, Camphorsulfonic acid and Epicatichan
-rt_min = 270
+rt_min = 250
 rt_max = 285
 mz_min = 289
 mz_max = 290
@@ -539,12 +560,69 @@ head(diff(single_peak_chr_df$mz) * 1e6 / mean(single_peak_chr_df$mz),40)
 
 ```
 
+Glycyrrhizic acid
+
+```{r}
+#starting parameters
+cwp <- CentWaveParam(peakwidth = c(2, 10), ppm=15, integrate = 2, snthresh=0,noise = 1500, prefilter = c(5,2000))
+
+#adjust the RT and MZ windows to visualize Raffinose, Camphorsulfonic acid and Epicatichan
+rt_min = 600
+rt_max = 660
+mz_min = 821
+mz_max = 822
+
+
+
+single_peak_chr <- chromatogram(single_data_file, rt = c(rt_min, rt_max),
+                        mz = c(mz_min, mz_max),
+                        aggregationFun = "max")
+
+
+
+single_peak_chr <- findChromPeaks(single_peak_chr, param = cwp)
+
+#' Plot the data and higlight identified peak area
+plot(single_peak_chr)
+
+chromPeaks(single_peak_chr)
+print("")
+print("")
+
+#' Extract the Rutin data a data.frame
+
+single_peak <- single_data_file %>%
+    filterRt(rt = c(rt_min, rt_max)) %>%
+    filterMz(mz = c(mz_min, mz_max))
+
+single_peak_chr_df <- as(single_peak, "data.frame")
+#' The difference between m/z values from consecutive scans expressed
+#' in ppm
+summary(diff(single_peak_chr_df$mz) * 1e6 / mean(single_peak_chr_df$mz))
+print("")
+print("")
+head(diff(single_peak_chr_df$mz) * 1e6 / mean(single_peak_chr_df$mz),40)
+
+```
+
+Let's check to make sure that the MergeNeighboring Peaks Function doesn't combine these two distinct peaks...
+
+```{r}
+mpp <- MergeNeighboringPeaksParam(expandRt = 4)
+single_peak_chr_merged <- refineChromPeaks(single_peak_chr, param = mpp)
+plot(single_peak_chr_merged)
+
+chromPeaks(single_peak_chr_merged)
+```
+
+It did not combine the two major peaks, and but it did combine one of the shoulder peaks with it's parent. Overall this is good.
+
 **Digoxin (formate aduct):**
 
 ```{r}
 
 #starting parameters
-cwp <- CentWaveParam(peakwidth = c(2, 10), ppm=15, integrate = 2, noise=500, snthresh=0)
+cwp <- CentWaveParam(peakwidth = c(2, 10), ppm=15, integrate = 2, snthresh=0,noise = 1500, prefilter = c(5,2000))
 
 #adjust the RT and MZ windows to visualize Raffinose, Camphorsulfonic acid and Epicatichan
 rt_min = 560
@@ -588,10 +666,10 @@ head(diff(single_peak_chr_df$mz) * 1e6 / mean(single_peak_chr_df$mz),40)
 Answers:
 
 |      Compound Name      | retention time (S) | m/z (M-H) | Peak Width (s) | Average PPM error | SN Ratio |            Notes            |
-|:-----------------------:|:------------------:|:---------:|:--------------:|:-----------------:|:--------:|:---------------------------:|
+|:---------:|:---------:|:---------:|:---------:|:---------:|:---------:|:---------:|
 |        Raffinose        |         20         | 503.1618  |       2        |         9         |    3     | This is a very narrow peak! |
 |       Tryptophan        |       141.6        | 203.0826  |       4        |        14         |    3     |       Low, wide peak        |
-|  Camphorsulfonic acid   |     230 to 250     | 231.0697  |       3        |        13         |    2     |  This is a very wide peak!  |
+|  Camphorsulfonic acid   |     230 to 250     | 231.0697  |       4        |        13         |    2     |  This is a very wide peak!  |
 |       Epicatichan       |       277.2        | 289.0718  |       6        |         3         |    12    |                             |
 |          Rutin          |       372.6        | 609.1469  |       6        |         8         |   424    |                             |
 | Digoxin (formate aduct) |       567.6        | 825.4267  |       4        |         7         |    3     |                             |
@@ -602,9 +680,12 @@ Note, we have to pick a compromise vale for peak width. We will not pick up Raff
 
 ```{r}
 
-cwp <- CentWaveParam(peakwidth = c(2, 10), ppm=15, integrate = 2, noise=500, snthresh=0)
+cwp <- CentWaveParam(peakwidth = c(2, 10), ppm=15, integrate = 2, snthresh=0,noise = 1500, prefilter = c(5,2000))
 
-rawData <- findChromPeaks(rawData, param = cwp)
+processedData <- findChromPeaks(rawData, param = cwp)
+
+mpp <- MergeNeighboringPeaksParam(expandRt = 4)
+processedData <- refineChromPeaks(processedData, param = mpp)
 
 ```
 
@@ -620,11 +701,7 @@ While chromatography helps to discriminate better between analyses it is also af
 
 ```{r}
 
-
-register(SerialParam(), default=TRUE)
-
-
-bpc_raw <- chromatogram(rawData, aggregationFun = "max",rt = c(0, 700))
+bpc_raw <- chromatogram(processedData, aggregationFun = "max",rt = c(0, 700))
 plot(bpc_raw, peakType = "none")
 ```
 
@@ -642,18 +719,18 @@ rt_max = 400
 mz_min = 609.00 
 mz_max = 609.2
 
-rutin_chr <- chromatogram(rawData, rt = c(rt_min, rt_max),
+rutin_chr <- chromatogram(processedData, rt = c(rt_min, rt_max),
                         mz = c(mz_min, mz_max),
                         aggregationFun = "max")
 plot(rutin_chr,peakType = "none", main="Rutin")
 
 #2 epichatichin
-rt_min = 270
+rt_min = 250
 rt_max = 290
 mz_min = 289
 mz_max = 290
 
-epi_chr <- chromatogram(rawData, rt = c(rt_min, rt_max),
+epi_chr <- chromatogram(processedData, rt = c(rt_min, rt_max),
                         mz = c(mz_min, mz_max),
                         aggregationFun = "max")
 plot(epi_chr,peakType = "none", main="Epichatichin")
@@ -664,7 +741,7 @@ rt_max = 300
 mz_min = 230.9
 mz_max = 231.3
 
-cam_chr <- chromatogram(rawData, rt = c(rt_min, rt_max),
+cam_chr <- chromatogram(processedData, rt = c(rt_min, rt_max),
                         mz = c(mz_min, mz_max),
                         aggregationFun = "max")
 plot(cam_chr,peakType = "none", main="Camphorsulfonic Acid")
@@ -676,7 +753,7 @@ rt_max = 580
 mz_min = 825
 mz_max = 826
 
-Dig_chr <- chromatogram(rawData, rt = c(rt_min, rt_max),
+Dig_chr <- chromatogram(processedData, rt = c(rt_min, rt_max),
                         mz = c(mz_min, mz_max),
                         aggregationFun = "max")
 plot(Dig_chr,peakType = "none", main="Digoxin")
@@ -696,16 +773,16 @@ For our example we use the peakGroups method that aligns samples based on the re
 
 #' Define the settings for the initial peak grouping - details for
 #' choices in the next section.
-pdp <- PeakDensityParam(sampleGroups = pData(rawData)$group, bw = 30,
-                        minFraction = 1, binSize = 0.05)
+pdp <- PeakDensityParam(sampleGroups = pData(processedData)$group, bw = 15,
+                        minFraction = 0.1, binSize = 0.05)
 
-rawData <- groupChromPeaks(rawData, pdp)
+processedData <- groupChromPeaks(processedData, pdp)
 
 
 #' Define settings for the alignment
-pgp <- PeakGroupsParam(minFraction = 1, span = 0.6)
-rawData <- adjustRtime(rawData, param = pgp) 
-
+pgp <- PeakGroupsParam(minFraction = 0.1, span = 0.6)
+#op <- ObiwarpParam(response = 100)
+processedData <- adjustRtime(processedData, param = pgp) 
 
 ```
 
@@ -717,7 +794,7 @@ par(mfrow = c(2, 1))
 #' Plot the raw base peak chromatogram
 plot(bpc_raw, peakType = "none")
 #' Plot the BPC after alignment
-plot(chromatogram(rawData, aggregationFun = "max", include = "none",rt = c(0, 700)))
+plot(chromatogram(processedData, aggregationFun = "max", include = "none",rt = c(0, 700)))
 
 
 
@@ -735,18 +812,18 @@ rt_max = 400
 mz_min = 609.00 
 mz_max = 609.2
 
-rutin_chr <- chromatogram(rawData, rt = c(rt_min, rt_max),
+rutin_chr <- chromatogram(processedData, rt = c(rt_min, rt_max),
                         mz = c(mz_min, mz_max),
                         aggregationFun = "max")
 plot(rutin_chr,peakType = "none", main="Rutin")
 
 #2 epichatichin
-rt_min = 270
+rt_min = 250
 rt_max = 290
 mz_min = 289
 mz_max = 290
 
-epi_chr <- chromatogram(rawData, rt = c(rt_min, rt_max),
+epi_chr <- chromatogram(processedData, rt = c(rt_min, rt_max),
                         mz = c(mz_min, mz_max),
                         aggregationFun = "max")
 plot(epi_chr,peakType = "none", main="Epichatichin")
@@ -757,7 +834,7 @@ rt_max = 300
 mz_min = 230.9
 mz_max = 231.3
 
-cam_chr <- chromatogram(rawData, rt = c(rt_min, rt_max),
+cam_chr <- chromatogram(processedData, rt = c(rt_min, rt_max),
                         mz = c(mz_min, mz_max),
                         aggregationFun = "max")
 plot(cam_chr,peakType = "none", main="Camphorsulfonic Acid")
@@ -769,7 +846,7 @@ rt_max = 580
 mz_min = 825
 mz_max = 826
 
-Dig_chr <- chromatogram(rawData, rt = c(rt_min, rt_max),
+Dig_chr <- chromatogram(processedData, rt = c(rt_min, rt_max),
                         mz = c(mz_min, mz_max),
                         aggregationFun = "max")
 plot(Dig_chr,peakType = "none", main="Digoxin")
@@ -787,7 +864,7 @@ We can start with the default parameters and see how they work
 
 ```{r}
 #' Get default parameters for the grouping
-pdp <- PeakDensityParam(sampleGroups = pData(rawData)$group)
+pdp <- PeakDensityParam(sampleGroups = pData(processedData)$group)
 
 pdp
 ```
@@ -806,10 +883,10 @@ The parameters `minFraction` and `minSamples` depend on the experimental layout 
 
 ```{r}
 
-bpc_raff <- chromatogram(rawData, mz = c(503.1, 503.2),rt = c(0, 100),
+bpc_raff <- chromatogram(processedData, mz = c(503.1, 503.2),rt = c(0, 100),
                            aggregationFun = "max")
 #' Dry-run correspondence and show the results.
-plotChromPeakDensity(bpc_rutin, param = pdp)
+plotChromPeakDensity(bpc_raff, param = pdp)
 ```
 
 The upper panel in the plot above shows the chromatographic data with the identified peaks. The lower panel shows the retention time of identified peaks (x-axis) per sample (y-axis) with the black solid line representing their distribution along the x-axis. Peak groups (features) are indicated with grey rectangles. The peak density correspondence method groups all chromatographic peaks under the same *density peak* into a feature. With the default settings we were able to group the Rutin peak of each sample into a feature.
@@ -819,19 +896,19 @@ First we extract all of the compounds within a window.
 ```{r}
 
 
-bpc_trypt <- chromatogram(rawData, mz = c(203.0, 203.2),rt = c(100, 500),
+bpc_trypt <- chromatogram(processedData, mz = c(203.0, 203.2),rt = c(100, 500),
                            aggregationFun = "max")
-bpc_camphor <- chromatogram(rawData, mz = c(231.0, 231.1),rt = c(200, 400),
+bpc_camphor <- chromatogram(processedData, mz = c(231.0, 231.1),rt = c(200, 400),
                            aggregationFun = "max")
-bpc_epic <- chromatogram(rawData, mz = c(289.0, 289.15),rt = c(200, 500),
+bpc_epic <- chromatogram(processedData, mz = c(289.0, 289.15),rt = c(200, 500),
                            aggregationFun = "max")
-bpc_rutin <- chromatogram(rawData, mz = c(609.1, 609.2),rt = c(350, 500),
+bpc_rutin <- chromatogram(processedData, mz = c(609.1, 609.2),rt = c(350, 500),
                            aggregationFun = "max")
-bpc_morin <- chromatogram(rawData, mz = c(301.0, 301.1),rt = c(400, 600),
+bpc_morin <- chromatogram(processedData, mz = c(301.0, 301.1),rt = c(400, 600),
                            aggregationFun = "max")
-bpc_digoxin <- chromatogram(rawData, mz = c(825.35, 825.45),rt = c(550, 700),
+bpc_digoxin <- chromatogram(processedData, mz = c(825.35, 825.45),rt = c(550, 700),
                            aggregationFun = "max")
-bpc_glyc <- chromatogram(rawData, mz = c(821.35, 821.45),rt = c(500, 750),
+bpc_glyc <- chromatogram(processedData, mz = c(821.35, 821.45),rt = c(500, 750),
                            aggregationFun = "max")
 
 plot(bpc_raff)
@@ -912,11 +989,11 @@ featureDefinitions(bpc_glyc)[1:6]
 
 ```
 
-we can adjust bw from 25 to smaller values. This will separate masses that are close in time.
+we can adjust bw from 25 to smaller values. This will separate masses that are closer in time.
 
 ```{r}
 #we have to go all the way down to BW = 4 before these two peaks will separate
-pdp <- PeakDensityParam(sampleGroups = pData(rawData)$group, bw=4, binSize=0.25, minSamples=1, minFraction = 0.001)
+pdp <- PeakDensityParam(sampleGroups = pData(processedData)$group, bw=7, binSize=0.25, minSamples=1, minFraction = 0.001)
 
 
 plotChromPeakDensity(bpc_glyc, param = pdp)
@@ -988,12 +1065,12 @@ featureDefinitions(bpc_glyc)[1:6]
 
 ```
 
-Next we group all features accross the dataset using these newly defined paramaters.
+Next we group all features across the data set using these newly defined parameters.
 
 ```{r}
-pdp <- PeakDensityParam(sampleGroups = pData(rawData)$group, bw=4, binSize=0.25, minSamples=1, minFraction = 0.001)
+pdp <- PeakDensityParam(sampleGroups = pData(processedData)$group, bw=7, binSize=0.25, minSamples=1, minFraction = 0.001)
 
-rawData <- groupChromPeaks(rawData, param = pdp) 
+processedData <- groupChromPeaks(processedData, param = pdp) 
 
 ```
 
@@ -1003,7 +1080,7 @@ Results from the correspondence analysis can be accessed with the `featureDefini
 
 ```{r}
 #' Definition of the features
-
+featureDefinitions(processedData)
 ```
 
 The final result from the LC-MS data preprocessing is a matrix with feature abundances, rows being features, columns samples. Such a matrix can be extracted with the `featureValues` function from the result object (see further below for an alternative, preferred way to extract preprocessing results with the `quantify` method). The function takes two additional parameters `value` and `method`: `value` defines the column in the `chromPeaks` table that should be reported in the matrix, and `method` the approach to handle cases in which more than one peak in a sample is assigned to the feature.
@@ -1012,7 +1089,7 @@ Below we set `value = "into"` (the default) to extract the total integrated peak
 
 ```{r}
 #' feature intensity matrix
-fmat <- featureValues(rawData, value = "into", method = "maxint")
+fmat <- featureValues(processedData, value = "into", method = "maxint")
 head(fmat)
 ```
 
@@ -1022,8 +1099,88 @@ sum(is.na(fmat))
 ```
 
 ```{r}
-rawData <- fillChromPeaks(rawData, param = ChromPeakAreaParam())
+processedData <- fillChromPeaks(processedData, param = ChromPeakAreaParam())
 
 #' How many missing values after
-sum(is.na(featureValues(rawData)))
+sum(is.na(featureValues(processedData)))
+```
+
+Last Step:
+
+CAMERA to group things into Psuedo Spectra and add isotopes and adducts
+
+First we convert the "XCMSnExp" object into an xset object so it can work with CAMERA
+
+```{r}
+library(CAMERA)
+xset <- as(filterMsLevel(processedData, msLevel = 1L), "xcmsSet")
+sampclass(xset) <- pData(processedData)$group
+```
+
+Next we set the polararity and we group peaks:
+
+```{r}
+xsa <- xsAnnotate(xset, polarity = "negative")
+xsaF <- groupFWHM(xsa, sigma = 6, perfwhm = 0.8)
+
+peakList <- getPeaklist(xsaF)
+peakList <- peakList[order(as.numeric(peakList$pcgroup),-peakList$X7),]
+
+View(peakList)
+```
+
+We can extract specific compounds to look at and then examine how coeluting features get grouped.
+
+```{r}
+#1 Rutin
+rt_min = 350
+rt_max = 400
+mz_min = 609.00 
+mz_max = 609.2
+
+
+
+
+peakList_subset <- peakList[peakList$mz >= mz_min & peakList$mz <= mz_max & peakList$rt >= rt_min & peakList$rt <= rt_max,]
+
+
+peakList <- getPeaklist(xsaF)
+peakList <- peakList[order(as.numeric(peakList$pcgroup),-peakList$X7),]
+
+peakList_subset
+
+
+pcgroup_subset <- peakList_subset$pcgroup
+
+#this identified pcgroup 1
+
+# now what other mz value are co-eluting with the main feature around 609?
+
+peakList[peakList$pcgroup == pcgroup_subset,]
+```
+
+```{r}
+xsaC <- groupCorr(xsaF, cor_eic_th = 0.25, pval = 0.05, graphMethod = "hcs",
+                  calcCiS = TRUE, calcCaS = FALSE, calcIso = FALSE)
+peakList_cor <- getPeaklist(xsaC)
+
+peakList_merged <- merge(peakList,peakList_cor[,"pcgroup"],by=0)
+peakList_merged <- peakList_merged[order(as.numeric(peakList_merged$pcgroup),-peakList_merged$X7),]
+
+
+write.csv(peakList_merged,"~/Downloads/peaklist_merged.csv")
+
+```
+
+```{r}
+xsaFI <- findIsotopes(xsaC, maxcharge = 2, maxiso = 3, minfrac = 0.5, ppm = 10, intval = "maxo")
+
+xsaFA <- findAdducts(xsaFI, polarity = "negative", 
+                     max_peaks = 100, multiplier = 3, ppm = 10)
+edgelist <- getEdgelist(xsaFA)
+
+xset5 <- getPeaklist(xsaFA)
+```
+
+```{}
 ```

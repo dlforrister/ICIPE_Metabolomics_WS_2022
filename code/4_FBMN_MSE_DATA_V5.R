@@ -1,0 +1,310 @@
+library(dplyr)
+library(xcms)
+library(CAMERA)
+library(here)
+library(MergeION)
+library(stringr)
+
+here()
+
+source("https://raw.githubusercontent.com/jorainer/xcms-gnps-tools/master/customFunctions.R")
+
+#Serial vs multicore. It appears that paraellizing often causes errors. It's slower to run in serial but seems to work better. 
+register(SerialParam(), default=TRUE)
+#alternatively on a PC we can:
+#register(bpstart(SnowParam(4)))
+
+
+#set working directory to the google drive space.
+#The following will determine which folder based on if it's a PC or a Mac. edit the line setWD() for the path where google data are stored. 
+
+if (.Platform$OS.type == "unix") {
+  register(SerialParam(), default=TRUE)
+  setwd("/Volumes/GoogleDrive-108763975232397414829/My Drive/Ecuador_XCMS_Projects/")
+  #register(bpstart(MulticoreParam(4)))
+} else {
+  register(bpstart(SnowParam(4)))
+  setwd("E:/My Drive/Ecuador_XCMS_Projects/")
+}
+register(SerialParam())
+
+
+### The UPLC Master file has all of the information required for loading data and the order that files were run in, which gets used later on for standards 
+UPLC_Results_Master <- read.csv("./UPLC_RESULTS_AMAZON_PROJECT_JUNE2022_V6.csv")
+
+#First we  subset to a specifc project....
+project <- "DUROIA"
+
+UPLC_Results <- UPLC_Results_Master[UPLC_Results_Master[,project] == "YES",]
+
+#get all of the information from the uplc_results table for building the metatadata tables associated with the project and store in pd dataframe
+
+### Get the file paths for each of the datatypes.
+#MS level 1 all
+mzml_all <- UPLC_Results$Converted_Check
+
+
+
+#define sample groups (samples, blanks and standards)
+s_groups <-  UPLC_Results$sample_type
+id <- UPLC_Results$X.id.
+sample <- gsub(".mzML","",basename(mzml_all))
+
+
+pd <- data.frame(injection_idx = id, sample=sample, file = basename(mzml_all), path= mzml_all, group =s_groups)
+
+#Read all of the data as an XCMS project.
+#this slow but can't be spead up with par processing. Best on fast hard drives.
+rawData <- readMSData(pd$path, pdata = new("NAnnotatedDataFrame", pd), centroided. = TRUE,mode= "onDisk", verbose=T)
+
+
+#Peak chromatographic peaks
+#slowest step, this in theory can be sped up with par processing but might break
+cwp <- CentWaveParam(peakwidth = c(2, 10), ppm=15, integrate = 2, noise=500, snthresh=0,msLevel = 1L)
+
+processedData <- findChromPeaks(rawData, param = cwp)
+processedData<- filterMsLevel(processedData, msLevel =1L)
+#group peaks
+pdp <- PeakDensityParam(sampleGroups = pData(processedData)$group, bw=4, binSize=0.5, minSamples=1, minFraction = 0.001)
+
+processedData <- groupChromPeaks(processedData, param = pdp)
+
+
+#RT correction
+medWidth <- median(chromPeaks(processedData)[, "rtmax"] -
+                     chromPeaks(processedData)[, "rtmin"])
+
+pgp <- PeakGroupsParam(minFraction = 0.1, span = 0.6,subset=which(pData(processedData)$group == "Standard"),subsetAdjust = "previous")
+
+processedData <- adjustRtime(processedData, param = pgp) 
+
+#regroup peaks
+processedData <- groupChromPeaks(processedData, param = pdp)
+
+#now that we have a set of features - go back and fill the blanks
+processedData <- fillChromPeaks(processedData,
+                                param = FillChromPeaksParam(fixedRt = medWidth))
+
+
+
+#convert xcms object into a feature matrix so that it can be compared with MS2 data
+
+xset <- as(filterMsLevel(processedData, msLevel = 1L), "xcmsSet")
+sampclass(xset) <-pData(processedData)$group
+
+
+#USE CAMERA for feature grouping into compounds 
+xsa <- xsAnnotate(xset, polarity = "negative")
+xsaF <- groupFWHM(xsa, sigma = 6, perfwhm = 1)
+xsaC <- groupCorr(xsaF, cor_eic_th = 0.6, pval = 0.05, graphMethod = "hcs",
+                  calcCiS = TRUE, calcCaS = FALSE, calcIso = FALSE)
+xsaFI <- findIsotopes(xsaC, maxcharge = 2, maxiso = 3, minfrac = 0.5, ppm = 10, intval = "maxo")
+
+xsaFA <- findAdducts(xsaFI, polarity = "negative", 
+                     max_peaks = 100, multiplier = 3, ppm = 10)
+edgelist <- getEdgelist(xsaFA)
+
+xset5 <- getPeaklist(xsaFA)
+xset5$feature_id <- row.names(processedData@msFeatureData$featureDefinitions)
+xset5$row_number <- row.names(xset5)
+
+
+#Remove Peaks Found in the Blank
+nsamples <- length(pData(processedData)$sample)
+colnames(xset5)[seq(13,12+nsamples,1)] <- pData(processedData)$sample
+
+#convert NA abundances to 0
+
+abund_df <- xset5[,seq(13,12+nsamples,1)]
+abund_df[is.na(abund_df)] <- 0
+
+xset5$Blank_max_value <- as.numeric(apply(abund_df[,which(pData(processedData)$group == "Blank")], 1, max))
+xset5$max_value <- as.numeric(apply(abund_df, 1, max))
+
+xset6 <- xset5[which(xset5$Blank_max_value < 1000),]
+
+
+#Shorten Retention Time Window
+xset7 <- xset6[which(xset6$rt > 25 & xset6$rt < 660),]
+
+#remove anything with max value less than 5000
+xset8 <- xset7[which(xset7$max_value > 5000),]
+
+max_pc <- aggregate(xset8$max_value, by = list(xset8$pcgroup), max)
+
+
+#xset9 <- as.data.frame(xset8 %>%
+                         group_by(pcgroup) %>%
+                         filter(max_value == max(max_value, na.rm=TRUE)))
+
+xset8 <- xset8[order(xset8$max_value,decreasing = T),]
+
+length(unique(xset8$pcgroup))
+nrow(xset8)
+
+xset8$has_msms <- xset8$feature_id %in% ms_ms_match_results_df$feat_id
+table(xset8$feature_id %in% ms_ms_match_results_df$feat_id)
+
+
+#### Match Features between MS1 and MS2
+
+#MS level 2 
+#MSE_deconvoluted <-  UPLC_Results$MSE_Check[UPLC_Results$MSE_Check != ""]
+MSE_deconvoluted <- paste0("./Duroia/data/MSE/msdial/MS_Dial_100_075/",list.files(path = "./Duroia/data/MSE/msdial/MS_Dial_100_075/",pattern = ".mgf"))
+#MSE_deconvoluted <- paste0("./Duroia/data/MSE/msdial/MS_Dial_100_05/",list.files(path = "./Duroia/data/MSE/msdial/MS_Dial_100_05//",pattern = ".mgf"))
+#MSE_deconvoluted <- paste0("./Duroia/data/MSE/msdial/MS_Dial_10_50/",list.files(path = "./Duroia/data/MSE/msdial/MS_Dial_10_50//",pattern = ".mgf"))
+
+#read in all MSE files and put into a DF:
+mse_DF<- data.frame()
+for(file in MSE_deconvoluted){
+mse_mgf2 <- readMGF2(file)
+mse_DF_single <- data.frame(scans= as.numeric(mse_mgf2$metadata$SCANS), precursorMZ= as.numeric(mse_mgf2$metadata$PEPMASS), retentionTime= as.numeric(mse_mgf2$metadata$RTINMINUTES)*60)
+mse_DF_single$file <- gsub(".mgf","",basename(file))
+mse_DF <- rbind(mse_DF,mse_DF_single)}
+
+#add file index that matches processedData info
+mse_DF$file_index <- sapply(mse_DF$file, function(file) {which(pData(processedData)$sample == file)})
+
+#function getting which feature id each sample's peaks got grouped into by XCMS
+
+get_feature_from_peak <- function(peak){
+  feature_match <- unlist(lapply(1:length(processedData@msFeatureData$featureDefinitions$peakidx), function(y) {peak %in% processedData@msFeatureData$featureDefinitions$peakidx[[y]]}))
+  if(length(which(feature_match)) ==1) {return(row.names(processedData@msFeatureData$featureDefinitions)[feature_match])}
+  if(length(which(feature_match)) == 0) {return("no match")}
+  if(length(which(feature_match)) > 1) {return("too many matches")}
+}
+
+#convert proccesedData into a dataframe to be matched to
+sample_chrom_peaks <- as.data.frame(processedData@msFeatureData$chromPeaks)
+sample_chrom_peaks$peakid <- as.numeric(gsub("CP","",row.names(sample_chrom_peaks)))
+
+
+mse_DF[which.min(abs(mse_DF$precursorMZ - 609.15)),]
+
+#function for match MSE deconvolved scans to their XCMS feature
+match_features <- function(x){
+  msms_feature <- mse_DF[x,]
+  mz <- msms_feature$precursorMZ  
+  mzmin <- mz - 0.01
+  mzmax <- mz + 0.01
+  rt <- msms_feature$retentionTime
+  rtmin <- rt-20
+  rtmax <- rt+20
+  
+  pot_feature <- sample_chrom_peaks[sample_chrom_peaks$mz >= mzmin & sample_chrom_peaks$mz <= mzmax & sample_chrom_peaks$rt >= rtmin & sample_chrom_peaks$rt <= rtmax & sample_chrom_peaks$sample ==msms_feature$file_index,]
+  
+  if(nrow(pot_feature) == 0){return(data.frame(msms_file = msms_feature$file, mz = msms_feature$precursorMZ,rt=msms_feature$retentionTime,msms_scan = msms_feature$scans, peakid = "no_match", feat_id = "no_match"))}
+  if(nrow(pot_feature) == 1){return(data.frame(msms_file = msms_feature$file, mz = msms_feature$precursorMZ,rt=msms_feature$retentionTime,msms_scan = msms_feature$scans, peakid = pot_feature$peakid, feat_id = get_feature_from_peak(pot_feature$peakid)))}
+  if(nrow(pot_feature) > 1) {
+    pot_feature$feat_id <- unlist(lapply(pot_feature$peakid,FUN=get_feature_from_peak))
+    pot_feature <- pot_feature[pot_feature$feat_id!="no match",]
+    if(nrow(pot_feature) == 0){return(data.frame(msms_file = msms_feature$file, mz = msms_feature$precursorMZ,rt=msms_feature$retentionTime,msms_scan = msms_feature$scans, peakid = "no_match", feat_id = "no_match"))}
+    if(nrow(pot_feature) == 1){return(data.frame(msms_file = msms_feature$file, mz = msms_feature$precursorMZ,rt=msms_feature$retentionTime,msms_scan = msms_feature$scans, peakid = pot_feature$peakid, feat_id = get_feature_from_peak(pot_feature$peakid)))}
+    if(nrow(pot_feature) > 1) {
+    closest_feature <- pot_feature[which.min(abs(pot_feature$mz - mz)*1000+abs(pot_feature$rt - rt)),]
+    return(data.frame(msms_file = msms_feature$file, mz = msms_feature$precursorMZ,rt=msms_feature$retentionTime,msms_scan = msms_feature$scans, peakid = closest_feature$peakid, feat_id = get_feature_from_peak(closest_feature$peakid)))}
+    
+  }}
+
+ms_ms_match_results <- lapply(1:nrow(mse_DF),FUN = match_features)
+
+ms_ms_match_results_df <- do.call("rbind", ms_ms_match_results)
+nrow(ms_ms_match_results_df)
+
+ms_ms_match_results <- lapply(1:3,FUN = match_features)
+ms_ms_match_results_df <- do.call("rbind", ms_ms_match_results)
+
+
+
+ms_ms_match_results_df[ms_ms_match_results_df$feat_id== "no match",]
+
+#### Need to take a look at matches and set real filter
+#### Need to only look at major TIC amounts.... and see what portion of TIC has ms/ms matches...
+
+
+### Next Steps::
+#Create a abundance table that actually works on GNPS:
+#Filter ms_ms_match_results so they match what are in abundance table
+#write output and check in sirus
+#run network
+
+#check on RT shift! Process all of the standards for the entire project. See if the RT alignment is going to work!!!
+
+#Make a game plan for how to process all of the data?
+
+
+#write mgf file 
+
+####### Write .mgf containing MSMS spectrum for each compound #######
+
+text_to_write <- c()
+feature_list_to_write_mgf <- ms_ms_match_results_df[ms_ms_match_results_df$file != "no_match",]
+feature_list_to_write_mgf <- feature_list_to_write_mgf[order(feature_list_to_write_mgf$file,as.numeric(feature_list_to_write_mgf$feature_id)),]
+cur_file <- feature_list_to_write_mgf$file[1]
+
+#feature_order <- as.numeric(xset_Matched$Row.names)[order(as.numeric(xset_Matched$Row.names))]
+for(k in 1:nrow(feature_list_to_write_mgf)) {
+  if (k== 1) {text_to_write = c(text_to_write,paste("COM=Experimentexported on", Sys.time(),"\n",sep = "\t"))
+  mse_mgf2 <- readMGF2(MSE_deconvoluted[which(gsub(".mgf","",basename(MSE_deconvoluted)) == cur_file)])}
+  
+  if (feature_list_to_write_mgf$file[k]!=cur_file) {
+    cur_file <- feature_list_to_write_mgf$file[k]
+    mse_mgf2 <- readMGF2(MSE_deconvoluted[which(gsub(".mgf","",basename(MSE_deconvoluted)) == cur_file)])}
+
+    
+  feature_data <- feature_list_to_write_mgf[k,c("mz","rt","feature_id","msms_scan","file")]
+  ind_spec <- library_manager(mse_mgf2, query = c(paste0("SCANS=",feature_data$msms_scan)),logical="AND")$SELECTED$sp[[1]]
+  ind_spec_peaks <- c()
+  ind_metadata <- mse_mgf2$metadata[mse_mgf2$metadata$SCANS == feature_data$msms_scan,]
+  for(n in 1:nrow(ind_spec)){ind_spec_peaks <- c(ind_spec_peaks,paste(ind_spec[n,1],ind_spec[n,2],sep="\t"))}
+  text_to_write = c(text_to_write, c(c("BEGIN IONS",
+                                        paste("SCANS=",k,sep = ""),
+                                        paste("TITLE=msLevel 2; retentionTime",round(feature_data$rt,5),"; scanNum", k,"; precMz", round(feature_data$mz,5),"; precCharge 1-",sep = " "),
+                                        #paste("RTINSECONDS=",round(feature_data$rt,5), sep=""),
+                                        paste("RTINSECONDS=", as.numeric(ind_metadata$RTINMINUTES)*60, sep=""),
+                                        #paste("RTINMINUTES=",round(feature_data$rt,5)/60, sep=""),
+                                        paste("RTINMINUTES=", round(as.numeric(ind_metadata$RTINMINUTES),3), sep=""),
+                                        #paste("PEPMASS=",round(feature_data$mz,5), sep=""),
+                                        paste("PEPMASS=", as.numeric(ind_metadata$PEPMASS), sep=""),
+                                        "ION=[M-H]-",
+                                        "CHARGE=1-",
+                                        paste("FEATURE_ID=",feature_data$feature_id, sep=""),
+                                        paste("PEAK_ID=",feature_data$pcgroup, sep="")),
+                                        ind_spec_peaks,
+                                        "END IONS \n")) }
+
+
+write(text_to_write, file=here("results","./mgf_test_V5_10_75_msdial_mass.mgf"))
+
+
+### export abundance table
+
+
+#row.names(xset9) <- xset9$feature_id 
+
+xset_Matched <- xset_Matched[order(as.numeric(xset_Matched$Row.names)),]
+names(xset_Matched)[1:8] <- c("Row.names","mzmed","mzmin","mzmax","rtmed","rtmin","rtmax","npeaks")	
+gnps_feature_abund_table <- xset_Matched[c(1:12,seq(14,13+nsamples,1))]
+write.table(gnps_feature_abund_table, file = here("results","feauter_abundance_table_all_features.txt"),
+            row.names = FALSE, quote = FALSE, sep = "\t", na = "NA")
+
+
+##try what they did in the XCMS code...
+
+
+## get data
+featuresDef <- featureDefinitions(processedData)
+featuresIntensities <- featureValues(processedData, value = "into")
+
+## generate data table
+dataTable <- merge(featuresDef, featuresIntensities, by=0, all=TRUE)
+dataTable <- dataTable[, !(names(dataTable) %in% c("peakidx"))]
+
+###XMCS has not been working
+
+#export edge list
+
+edgelist <- getEdgelist(xsaFA)
+
+edgelist_sub <- edgelist[edgelist$Annotation != "", ]
+write.csv(edgelist_sub, file = here("results","camera_iin_edgelist.csv"), row.names = FALSE,quote = FALSE, na = "")
